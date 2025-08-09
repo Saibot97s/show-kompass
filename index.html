@@ -59,7 +59,7 @@
       position: relative; isolation: isolate;
       border-radius: calc(var(--radius) + 8px);
       margin: 28px auto 48px; overflow: hidden;
-      background: url('https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
+      background: url('img1.jpg') center/cover no-repeat;
       min-height: 58vh;
       display:grid; place-items:center;
       box-shadow: 0 10px 45px rgba(0,0,0,0.45);
@@ -145,6 +145,44 @@
     .x { background:none; border:none; color:#cbd5e1; font-size: 22px; cursor:pointer; }
     .video-wrap { position:relative; aspect-ratio: 16/9; background:#000; }
     .video-wrap iframe { position:absolute; width:100%; height:100%; border:0; }
+
+.benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .benefit {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .benefit-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .testimonial {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      font-style: italic;
+    }
+    .testimonial strong {
+      display: block;
+      margin-top: 10px;
+      font-style: normal;
+      color: #ccc;
+    }
+
   </style>
   <script>
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init Re Cs Fs Pe Rs Ms capture Ve calculateEventProperties Ds register register_once register_for_session unregister unregister_for_session zs getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty js As createPersonProfile Ns Is Us opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Os debug I Ls getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -160,7 +198,7 @@
     <div class="container nav">
       <div class="brand" aria-label="Marke">
         <div class="logo" aria-hidden="true"></div>
-        <span>Stellar Courses</span>
+        <span>StageWise</span>
       </div>
       <nav>
         <a class="btn" href="#kurse">Kurse</a>
@@ -172,10 +210,9 @@
   <!-- HERO -->
   <section class="container hero" aria-label="Hauptseite – Hero mit Vorschauvideo">
     <div class="hero-inner">
-      <span class="eyebrow">Lerne smart. Wachse schneller.</span>
-      <h1>Premium-Videokurse für dein nächstes Level</h1>
-      <p>Meistere neue Skills mit hochwertigen, praxisnahen Videos. Elegantes Interface, klare Struktur, Fokus auf das Wesentliche.</p>
-
+      <span class="eyebrow">Werde Profi in der Musikbranche</span>
+      <h1>Verstehe das Business. Lebe deine Musik.</h1>
+      <p>Lerne alles, um dein Hobby zum Beruf zu machen: Finanzen, Marketing, und wie du auf der Bühne glänzt.</p>
       <div class="play-wrap">
         <span class="pulse" aria-hidden="true"></span>
         <button class="play-btn" aria-label="Vorschauvideo abspielen" onclick="openPreview()">
@@ -184,7 +221,6 @@
           </svg>
         </button>
       </div>
-
       <div class="hero-cta">
         <a class="cta primary" href="#kurse">Kurse entdecken</a>
         <a class="cta" href="#kontakt">Beratung anfragen</a>
@@ -192,46 +228,67 @@
     </div>
   </section>
 
+  <!-- BENEFITS -->
+  <section class="container section" aria-labelledby="benefits-title">
+    <h2 id="benefits-title">Deine Vorteile</h2>
+    <div class="benefits-grid">
+      <div class="benefit">
+        <div class="benefit-icon">🎵</div>
+        Praxisnah und speziell für Musiker entwickelt
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">🚀</div>
+        Direkt umsetzbares Wissen für deinen Karriereweg
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">📅</div>
+        Flexibles Lernen – jederzeit und überall
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">📜</div>
+        Zertifikate für deine Bewerbungen
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">⭐</div>
+        Experten mit jahrelanger Bühnenerfahrung
+      </div>
+    </div>
+  </section>
+
   <!-- KURSE -->
   <section id="kurse" class="container section" aria-labelledby="kurse-title">
-    <h2 id="kurse-title">Top-Kurse</h2>
-
+    <h2 id="kurse-title">Top-Kurse für Musiker</h2>
     <div class="grid">
-      <!-- Card 1 -->
       <article class="card">
-        <div class="thumb" role="img" aria-label="Kursbild – Moderne Webentwicklung"></div>
+        <div class="thumb" role="img" aria-label="Kursbild – Steuern & Finanzen"></div>
         <div class="content">
-          <div class="title">Moderne Webentwicklung – Von 0 auf Pro</div>
-          <div class="meta">20+ Stunden • Projekte • Zertifikat</div>
-          <div class="price">€ 149</div>
+          <div class="title">Steuern & Finanzen für Musiker</div>
+          <div class="meta">8 Stunden • Praxisnahe Tipps • Vorlagen</div>
+          <div class="price">€ 99</div>
           <div class="actions">
             <a href="#" class="btn">Vorschau</a>
             <a href="#" class="btn primary">Jetzt kaufen</a>
           </div>
         </div>
       </article>
-
-      <!-- Card 2 -->
       <article class="card">
-        <div class="thumb" role="img" aria-label="Kursbild – UI/UX Design Masterclass"></div>
+        <div class="thumb" role="img" aria-label="Kursbild – Marketing und Vertrieb"></div>
         <div class="content">
-          <div class="title">UI/UX Design Masterclass</div>
-          <div class="meta">12 Stunden • Designsysteme • Cases</div>
-          <div class="price">€ 119</div>
-          <div class="actions">
-            <a href="#" class="btn">Vorschau</a>
-            <a href="#" class="btn primary">Jetzt kaufen</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 3 -->
-      <article class="card">
-        <div class="thumb" role="img" aria-label="Kursbild – Datenanalyse mit Python"></div>
-        <div class="content">
-          <div class="title">Datenanalyse mit Python</div>
-          <div class="meta">16 Stunden • Pandas • Visualisierung</div>
+          <div class="title">Marketing & Vertrieb für Musiker</div>
+          <div class="meta">10 Stunden • Social Media • Fans gewinnen</div>
           <div class="price">€ 129</div>
+          <div class="actions">
+            <a href="#" class="btn">Vorschau</a>
+            <a href="#" class="btn primary">Jetzt kaufen</a>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="thumb" role="img" aria-label="Kursbild – Bühnenshows und Entertainment"></div>
+        <div class="content">
+          <div class="title">Bühnenshows & Entertainment</div>
+          <div class="meta">12 Stunden • Performance • Publikumsbindung</div>
+          <div class="price">€ 139</div>
           <div class="actions">
             <a href="#" class="btn">Vorschau</a>
             <a href="#" class="btn primary">Jetzt kaufen</a>
@@ -241,8 +298,19 @@
     </div>
   </section>
 
+  <!-- TESTIMONIALS -->
+  <section class="container section" aria-labelledby="testimonials-title">
+    <h2 id="testimonials-title">Das sagen unsere Teilnehmer</h2>
+    <div class="testimonials">
+      <div class="testimonial">„Die Kurse haben mir geholfen, meine Band professionell zu vermarkten. Besonders der Marketing-Kurs war Gold wert!“<strong>Anna, Sängerin</strong></div>
+      <div class="testimonial">„Endlich verstehe ich meine Finanzen als Musiker. Der Steuerkurs hat mir Hunderte Euro gespart.“<strong>Tom, Gitarrist</strong></div>
+      <div class="testimonial">„Dank des Entertainment-Kurses habe ich mein Publikum richtig im Griff – meine Shows sind jetzt ausverkauft.“<strong>Lisa, Pianistin</strong></div>
+      <div class="testimonial">„Ich habe die Kurse bequem neben meinem Job gemacht und sofort Erfolge gesehen.“<strong>Marco, Produzent</strong></div>
+    </div>
+  </section>
+
   <footer id="kontakt" class="container">
-    <p>© <span id="year"></span> Stellar Courses · Impressum · Datenschutz</p>
+    <p>© <span id="year"></span> StageWise · Impressum · Datenschutz</p>
   </footer>
 
   <!-- PREVIEW MODAL -->
@@ -252,27 +320,17 @@
       <button class="x" aria-label="Schließen" onclick="closePreview()">×</button>
     </div>
     <div class="video-wrap">
-      <!-- Beispiel-Embed: YouTube. Ersetze die src mit deinem Promo-Video. -->
       <iframe src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0" title="Kursvorschau" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
   </dialog>
 
   <script>
-    // Jahr im Footer
     document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Modal Steuerung
     const modal = document.getElementById('previewModal');
-    function openPreview(){
-      if (!modal.open) modal.showModal();
-    }
-    function closePreview(){
-      if (modal.open) modal.close();
-    }
+    function openPreview(){ if (!modal.open) modal.showModal(); }
+    function closePreview(){ if (modal.open) modal.close(); }
     window.openPreview = openPreview;
     window.closePreview = closePreview;
-
-    // Schließen mit ESC
     modal.addEventListener('cancel', (e)=>{ e.preventDefault(); closePreview(); });
   </script>
 </body>
