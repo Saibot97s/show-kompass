@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Media Kit – Cover (Full-Bleed, 1:1)</title>
+  <style>
+    :root{
+      /* A4 @ 96dpi */
+      --a4w: 794px;
+      --a4h: 1123px;
+
+      /* Hero-Ratio 1:1 (quadratisch) */
+      --hero-w: 1;
+      --hero-h: 1;
+
+      /* Primärfarbe (hartcodiert) */
+      --brand: #F97316;           /* Orange */
+      --brand-rgb: 249,115,22;
+
+      --ink: #0b1120;
+      --muted: #475569;
+    }
+
+    @media print {
+      @page { size: A4; margin: 0; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      color: var(--ink);
+      background: #fff;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+
+    .page {
+      position: relative;
+      width: var(--a4w);
+      height: var(--a4h);   /* exakt A4 */
+      padding: 0;           /* KEIN Rand */
+      display: flex;
+      flex-direction: column;
+      gap: 0;               /* KEINE Lücken zwischen Sektionen */
+      background: #fff;
+    }
+
+    /* HERO (vollflächig, an Seitenkante) – 1:1 */
+    .hero {
+      position: relative;
+      height: calc(var(--a4w) * var(--hero-h) / var(--hero-w));
+      overflow: hidden;
+    }
+    .hero img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; /* keine Verzerrung */
+    }
+    .hero::after{ /* Boden-Gradient für Lesbarkeit */
+      content: "";
+      position: absolute; left: 0; right: 0; bottom: 0; height: 45%;
+      background: linear-gradient(to top, rgba(0,0,0,.60), rgba(0,0,0,0));
+      pointer-events: none;
+    }
+    .tophud {
+      position: absolute; left: 22px; right: 22px; top: 18px;
+      display: flex; justify-content: space-between; align-items: center;
+      color: #0b1120;
+      font-weight: 800;
+      letter-spacing: .02em;
+      font-size: 16px;
+      text-shadow: 0 1px 2px rgba(255,255,255,.45);
+    }
+    .name {
+      position: absolute; left: 22px; right: 22px; bottom: 24px;
+      color: #fff;
+      font-weight: 900;
+      font-size: 120px;   /* sehr groß & plakativ */
+      line-height: .86;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      word-break: break-word;
+      text-wrap: balance;
+      text-shadow: 0 3px 20px rgba(0,0,0,.55);
+    }
+
+    /* Band (vollbreit, ohne Außenabstand) */
+    .band {
+      flex: 0 0 56px;
+      background: #0b0b0e;
+      color: #e5e7eb;
+      padding: 0 20px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Unterer Split (vollbreit, ohne Außenabstand) */
+    .lower {
+      flex: 1 1 auto;  /* füllt den restlichen Platz exakt */
+      display: grid;
+      grid-template-columns: 1.65fr 1fr;
+      min-height: 0;
+    }
+    .left-grey {
+      background: #e5e7eb;
+      padding: 30px 32px;
+      display: flex;
+      align-items: center;
+    }
+    .left-grey .bio {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #111827;
+    }
+    .left-grey .bio p { margin: 0 0 12px 0; }
+    .left-grey .bio p:last-child { margin-bottom: 0; }
+
+    .right-brand {
+      background: var(--brand);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+    .right-brand .pill {
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-size: 34px;
+      line-height: 1.05;
+    }
+    .right-brand .year {
+      margin-top: 8px;
+      font-size: 22px;
+      font-weight: 800;
+      opacity: .98;
+    }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <div class="hero">
+      <img src="{{photoDataUrl}}" alt="Hero Foto von {{name}}">
+      <div class="tophud">
+        <span>Media Kit</span>
+        <span>{{year}}</span>
+      </div>
+      <div class="name">{{name}}</div>
+    </div>
+
+    <div class="band">{{tagline}}</div>
+
+    <div class="lower">
+      <div class="left-grey">
+        <div class="bio"><p>{{bioHtml}}</p></div>
+      </div>
+      <div class="right-brand">
+        <div>
+          <div class="pill">MEDIA<br>KIT</div>
+          <div class="year">{{year}}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
