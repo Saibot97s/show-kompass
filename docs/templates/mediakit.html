@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Media Kit – Cover (Full-Bleed, 1:1)</title>
+  <style>
+    /* A4 @ 96dpi – feste Maße (html2canvas-freundlich) */
+    .page {
+      position: relative;
+      width: 794px;
+      height: 1123px; /* exakt A4 */
+      padding: 0;     /* kein Rand */
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      background: #fff;
+      color: #0b1120;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+    }
+
+    /* HERO: 1:1, feste Höhe = Seitenbreite (794px) */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 794px;       /* 1:1 zur Seitenbreite */
+      overflow: hidden;
+      background: #e5e7eb;
+    }
+    .hero img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;   /* kein Quetschen */
+      display: block;
+    }
+    /* Echte Overlay-Div statt ::after (stabiler) */
+    .hero .gradient {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 45%;
+      background: linear-gradient(to top, rgba(0,0,0,.60), rgba(0,0,0,0));
+      pointer-events: none;
+    }
+    .tophud {
+      position: absolute; left: 22px; right: 22px; top: 18px;
+      display: flex; justify-content: space-between; align-items: center;
+      color: #0b1120;
+      font-weight: 800; letter-spacing: .02em; font-size: 16px;
+      text-shadow: 0 1px 2px rgba(255,255,255,.45);
+    }
+    .name {
+      position: absolute; left: 22px; right: 22px; bottom: 24px;
+      color: #fff; font-weight: 900; font-size: 120px; line-height: .86;
+      letter-spacing: .5px; text-transform: uppercase; word-break: break-word;
+      text-shadow: 0 3px 20px rgba(0,0,0,.55);
+    }
+
+    /* Schwarzer Band */
+    .band {
+      flex: 0 0 56px;
+      background: #0b0b0e; color: #e5e7eb;
+      padding: 0 20px; display: grid; place-items: center; text-align: center;
+      font-size: 16px; font-weight: 600;
+    }
+
+    /* Unterer Split */
+    .lower {
+      flex: 1 1 auto;       /* füllt den Rest exakt */
+      display: grid; grid-template-columns: 1.65fr 1fr; min-height: 0;
+    }
+    .left-grey {
+      background: #e5e7eb; padding: 30px 32px;
+      display: flex; align-items: center;
+    }
+    .left-grey .bio { font-size: 13px; line-height: 1.7; color: #111827; }
+    .left-grey .bio p { margin: 0 0 12px 0; }
+    .left-grey .bio p:last-child { margin-bottom: 0; }
+
+    .right-brand {
+      background: #F97316; color: #fff;
+      display: grid; place-items: center; text-align: center;
+    }
+    .right-brand .pill {
+      font-weight: 900; letter-spacing: .14em; text-transform: uppercase;
+      font-size: 34px; line-height: 1.05;
+    }
+    .right-brand .year { margin-top: 8px; font-size: 22px; font-weight: 800; opacity: .98; }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <div class="hero">
+      <img src="{{photoDataUrl}}" alt="Hero Foto von {{name}}" loading="eager" decoding="async">
+      <div class="tophud">
+        <span>Media Kit</span>
+        <span>{{year}}</span>
+      </div>
+      <div class="name">{{name}}</div>
+      <div class="gradient" aria-hidden="true"></div>
+    </div>
+
+    <div class="band">{{tagline}}</div>
+
+    <div class="lower">
+      <div class="left-grey">
+        <div class="bio"><p>{{bioHtml}}</p></div>
+      </div>
+      <div class="right-brand">
+        <div>
+          <div class="pill">MEDIA<br>KIT</div>
+          <div class="year">{{year}}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
