@@ -54,7 +54,7 @@ export default function Home() {
               </button>
             </form>
 
-   <br />
+            <br />
             <div className="proof" aria-live="polite">
               <div className="faces" aria-hidden="true">
                 <span className="face f1" />
@@ -179,8 +179,8 @@ export default function Home() {
               </span>
               <p style={{ margin: 0, fontWeight: 700, fontSize: 'clamp(1.2rem, 2.vw, 1.5rem)' }}>
                 Ich weiß aus eigener Erfahrung: Talent
-allein reicht nicht. Wer sich auf der Bühne verkaufen möchte, muss auch das Business
-dahinter verstehen.
+                allein reicht nicht. Wer sich auf der Bühne verkaufen möchte, muss auch das Business
+                dahinter verstehen.
               </p>
               <p>
                 Sirus Madjderey
@@ -189,8 +189,8 @@ dahinter verstehen.
 
             <p>
               Ich bin Musiker, Autor und Businessmensch. Vor einigen Jahren habe ich ein ungewöhnliches Handwerk für mich entdeckt: das Pfeifen.
-Ja, richtig gehört – ich pfeife auf der Bühne. Und klar, du fragst dich: Wer engagiert einen Kunstpfeifer? Genau diese Frage habe ich mir am Anfang auch gestellt. Heute halte ich den Weltrekord und war in unzähligen TV- , Radio- und Printmedien vertreten. Nicht, weil ich der beste Musiker bin – weit gefehlt. Sondern weil ich meine
-unternehmerische Erfahrung in meine Kunst einfließen ließ, dem Markt zugehört und das passende Produkt geschnürt habe. So konnte ich daraus ein Business bauen. – und genau das kannst du auch.
+              Ja, richtig gehört – ich pfeife auf der Bühne. Und klar, du fragst dich: Wer engagiert einen Kunstpfeifer? Genau diese Frage habe ich mir am Anfang auch gestellt. Heute halte ich den Weltrekord und war in unzähligen TV- , Radio- und Printmedien vertreten. Nicht, weil ich der beste Musiker bin – weit gefehlt. Sondern weil ich meine
+              unternehmerische Erfahrung in meine Kunst einfließen ließ, dem Markt zugehört und das passende Produkt geschnürt habe. So konnte ich daraus ein Business bauen. – und genau das kannst du auch.
             </p>
             <h4>Du kennst mich vielleicht aus:</h4>
 
@@ -282,8 +282,8 @@ unternehmerische Erfahrung in meine Kunst einfließen ließ, dem Markt zugehört
                 <div className="s-card">
                   <h3>👔 Professioneller Auftritt</h3>
                   <p className="muted">Zeigt, dass du weißt, wie das Geschäft funktioniert. Biografie, Pressetexte, Bilder, Videos, Logos, Social Links und Kontaktdaten übersichtlich gebündelt.
-            </p>
-               </div>
+                  </p>
+                </div>
               </div>
 
               <hr className="divider" />
@@ -376,8 +376,7 @@ unternehmerische Erfahrung in meine Kunst einfließen ließ, dem Markt zugehört
         <div className="grid">
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Steuern & Finanzen">
-                                <img src="/kurse/marketing-sales.jpg" alt="Kursbild: Marketing & Sales" loading="lazy" />
-
+              <img src="/kurse/sales.jpeg" alt="Kursbild: Marketing & Sales" loading="lazy" />
             </div>
             <div className="content">
               <div className="title">Marketing & Sales</div>
@@ -390,7 +389,7 @@ unternehmerische Erfahrung in meine Kunst einfließen ließ, dem Markt zugehört
           </article>
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Marketing und Vertrieb">
-                                <img src="/kurse/finanzen.jpeg" alt="Kursbild: Marketing & Sales" loading="lazy" />
+              <img src="/kurse/finanzen.jpeg" alt="Kursbild: Marketing & Sales" loading="lazy" />
 
             </div>
             <div className="content">
@@ -404,7 +403,7 @@ unternehmerische Erfahrung in meine Kunst einfließen ließ, dem Markt zugehört
           </article>
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Bühnenshows und Entertainment">
-                                <img src="/kurse/workflow.jpeg" alt="Kursbild – Bühnenshows und Entertainment" loading="lazy" />
+              <img src="/kurse/workflow.jpeg" alt="Kursbild – Bühnenshows und Entertainment" loading="lazy" />
 
             </div>
             <div className="content">
@@ -418,7 +417,7 @@ unternehmerische Erfahrung in meine Kunst einfließen ließ, dem Markt zugehört
           </article>
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Steuern & Finanzen">
-                  <img src="/kurse/marketing-sales.jpg" alt="Kursbild: Marketing & Sales" loading="lazy" />
+              <img src="/kurse/showact.jpeg" alt="Kursbild: Marketing & Sales" loading="lazy" />
             </div>
             <div className="content">
               <div className="title">Showact & Entertainment</div>

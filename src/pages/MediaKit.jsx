@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import html2pdf from "html2pdf.js";
 import Cropper from "react-easy-crop";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
 const TEMPLATE_URL = "/templates/mediakit.html";
 const PHOTO_ASPECT = 1 / 1;
@@ -74,6 +76,19 @@ export default function MediaKit() {
   const [bio, setBio] = useState("");
   const [photoUrl, setPhotoUrl] = useState(""); // final (DataURL, ggf. zugeschnitten)
   const [rawPhotoUrl, setRawPhotoUrl] = useState(""); // original DataURL vorm Zuschnitt
+  const [tagline, setTagline] = useState("");
+  const [contact, setContact] = useState("");      // mehrzeilig
+  const [heroText, setHeroText] = useState("");    // mehrzeilig
+  const [ctaUrl, setCtaUrl] = useState("");
+  const [ctaLabel, setCtaLabel] = useState("Jetzt ansehen");
+
+  // Seite 2
+  const [bioBlock, setBioBlock] = useState("");            // mehrzeilig
+  const [repertoireBlock, setRepertoireBlock] = useState(""); // mehrzeilig
+  const [riderBlock, setRiderBlock] = useState("");        // mehrzeilig
+
+  // Bild für Seite 2
+  const [portraitPhotoUrl, setPortraitPhotoUrl] = useState("");
 
   // Cropper-UI
   const [cropOpen, setCropOpen] = useState(false);
@@ -85,95 +100,97 @@ export default function MediaKit() {
   const hiddenHostRef = useRef(null);
 
   async function onGenerate(e) {
-  e?.preventDefault?.();
+    e?.preventDefault?.();
 
-  if (!name.trim() || !bio.trim() || !photoUrl) {
-    alert("Bitte Name, Bio und ein (zugeschnittenes) Foto angeben.");
-    return;
-  }
-
-  setBusy(true);
-  try {
-    // 1) Template laden
-    const res = await fetch(TEMPLATE_URL);
-    if (!res.ok) throw new Error(`Template nicht gefunden: ${TEMPLATE_URL}`);
-    let html = await res.text();
-
-    // 2) Platzhalter ersetzen (inkl. Tagline-Fix)
-    const bioHtml = escapeHtml(bio).replace(/\n/g, "<br>");
-    const firstLine = (bio || "").split(/\n/).find(l => l.trim().length > 0) || "";
-    const tagline = firstLine.slice(0, 120);
-
-    html = html
-      .replaceAll("{{name}}", escapeHtml(name))
-      .replaceAll("{{bioHtml}}", bioHtml)
-      .replaceAll("{{photoDataUrl}}", photoUrl)
-      .replaceAll("{{year}}", String(new Date().getFullYear()))
-      .replaceAll("{{tagline}}", escapeHtml(tagline));
-
-    // Plausibilitätscheck auf Platzhalter
-    if (html.includes("{{photoDataUrl}}")) {
-      throw new Error("Template-Platzhalter {{photoDataUrl}} wurde nicht ersetzt. Prüfe Dateipfad oder Platzhalternamen.");
+    if (!name.trim() || !bio.trim() || !photoUrl) {
+      alert("Bitte Name, Bio und ein (zugeschnittenes) Foto angeben.");
+      return;
     }
 
-    // 3) Versteckten Host im Viewport anlegen (sichtbar layouten)
-    let host = hiddenHostRef.current;
-    if (!host) {
-      host = document.createElement("div");
-      host.setAttribute("aria-hidden", "true");
-      host.style.position = "fixed";
-      host.style.left = "0";
-      host.style.top = "0";
-      host.style.width = "794px";    // A4 @ 96dpi
-      host.style.height = "1123px";  // A4 @ 96dpi
-      host.style.visibility = "hidden";
-      host.style.pointerEvents = "none";
-      host.style.zIndex = "-1";
-      document.body.appendChild(host);
-      hiddenHostRef.current = host;
+    if (!portraitPhotoUrl) {
+      alert("Bitte auch das Portrait für Seite 2 hochladen.");
+      return;
     }
-    host.innerHTML = html;
 
-    // >>> WICHTIG: HIER pageEl definieren – DANN benutzen!
-    const pageEl = host.querySelector(".page") || host;
+    setBusy(true);
+    try {
+      // 1) Template laden
+      const res = await fetch(TEMPLATE_URL);
+      if (!res.ok) throw new Error(`Template nicht gefunden: ${TEMPLATE_URL}`);
+      let html = await res.text();
 
-    // Debug-Helfer (optional)
-    const imgEl = pageEl.querySelector("img");
-    console.log(
-      "IMG present?", !!imgEl,
-      "complete?", imgEl ? imgEl.complete : null,
-      "dataURL?", imgEl ? String(imgEl.src).startsWith("data:image/") : null
-    );
+      // 2) Platzhalter
+      const autoTagline = (bio || "").split(/\n/).find(l => l.trim()) || "";
+      const finalTagline = (tagline && tagline.trim())
+        ? tagline.trim()
+        : autoTagline.slice(0, 120);
+      html = html
+        // Seite 1
+        .replaceAll("{{name}}", escapeHtml(name))
+        .replaceAll("{{tagline}}", escapeHtml(finalTagline))
+        .replaceAll("{{contact}}", escapeHtml(contact))
+        .replaceAll("{{herotext}}", escapeHtml(heroText))
+        .replaceAll("{{ctaUrl}}", escapeHtml(ctaUrl))
+        .replaceAll("{{ctaLabel}}", escapeHtml(ctaLabel))
+        // Seite 2
+        .replaceAll("{{bioBlock}}", escapeHtml(bioBlock))
+        .replaceAll("{{repertoireBlock}}", escapeHtml(repertoireBlock))
+        .replaceAll("{{riderBlock}}", escapeHtml(riderBlock))
+        .replaceAll("{{page2ImageUrl}}", portraitPhotoUrl)   // <— WICHTIG
+        // Hero-Bild Seite 1
+        .replaceAll("{{photoDataUrl}}", photoUrl);
 
-    // Auf Bilder warten, bevor gerendert wird
-    await waitForImages(pageEl);
+      // 3) OFFSCREEN Host (sichtbar renderbar!)
+      let host = hiddenHostRef.current;
+      if (!host) {
+        host = document.createElement("div");
+        host.setAttribute("aria-hidden", "true");
+        host.style.position = "absolute";
+        host.style.left = "-10000px"; // außerhalb Viewport
+        host.style.top = "0";
+        host.style.width = "794px"; // A4 @ 96dpi
+        host.style.height = "auto"; // mehrere Seiten
+        host.style.pointerEvents = "none";
+        document.body.appendChild(host);
+        hiddenHostRef.current = host;
+      }
+      host.innerHTML = html;
 
-    // 4) PDF erzeugen
-    const filename = `${slugify(name)}.pdf`;
-    const opt = {
-      margin: 0,
-      filename,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        scrollX: 0,
-        scrollY: 0,
-        windowWidth: 794
-      },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      pagebreak: { mode: ["css", "legacy"] },
-    };
+      // 4) Seiten sammeln
+      const pages = Array.from(host.querySelectorAll(".page"));
+      if (!pages.length) throw new Error("Keine .page im Template gefunden");
 
-    await html2pdf().set(opt).from(pageEl).save();
-  } catch (err) {
-    console.error(err);
-    alert(err.message || "Fehler beim PDF-Export.");
-  } finally {
-    setBusy(false);
+      // Auf Bilder warten (je Seite)
+      for (const p of pages) await waitForImages(p);
+
+      // 5) PDF erstellen (A4 mm)
+      const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
+
+      // Canvas -> Bild -> Seite
+      for (let i = 0; i < pages.length; i++) {
+        const canvas = await html2canvas(pages[i], {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff", // gegen transparent/weiß
+          scrollX: 0, scrollY: 0
+        });
+        const imgData = canvas.toDataURL("image/jpeg", 0.98);
+
+        const pageW = pdf.internal.pageSize.getWidth(); // 210 mm
+        const pageH = pdf.internal.pageSize.getHeight(); // 297 mm
+
+        if (i > 0) pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, 0, pageW, pageH, undefined, "FAST");
+      }
+
+      pdf.save(`${slugify(name)}.pdf`);
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Fehler beim PDF-Export.");
+    } finally {
+      setBusy(false);
+    }
   }
-}
 
 
   function onPhotoChange(e) {
@@ -189,6 +206,15 @@ export default function MediaKit() {
       setCropOpen(true); // direkt Crop-Dialog öffnen
     };
     reader.readAsDataURL(file);
+  }
+
+
+  function portraitPhotoChange(e) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => setPortraitPhotoUrl(String(r.result || ""));
+    r.readAsDataURL(f);
   }
 
   async function confirmCrop() {
@@ -240,11 +266,114 @@ export default function MediaKit() {
           />
         </div>
 
+
         <div className="field">
-          <label className="label">Foto *</label>
+          <label htmlFor="tagline" className="label">Tagline *</label>
+          <input
+            className="big-input"
+            placeholder="Kurzer Claim …"
+            value={tagline}
+            onChange={(e) => setTagline(e.target.value)}
+          />
+        </div>
+
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">Kontakt *</label>
+          <textarea
+            className="big-textarea"
+            placeholder={"Max Mustermann\nmax@example.com\n+43 660 1234567"}
+            rows={5}
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">Hero Text Rechts *</label>
+          <textarea
+            className="big-textarea"
+            placeholder="Kurztext …"
+            rows={6}
+            value={heroText}
+            onChange={(e) => setHeroText(e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">CTA URL & LAbel *</label>
+          <div style={{ display: "flex", gap: 8 }}>
+            <input
+              className="big-input"
+              placeholder="https://…"
+              value={ctaUrl}
+              onChange={(e) => setCtaUrl(e.target.value)}
+              style={{ flex: 2 }}
+            />
+            <input
+              className="big-input"
+              placeholder="Button-Text"
+              value={ctaLabel}
+              onChange={(e) => setCtaLabel(e.target.value)}
+              style={{ flex: 1 }}
+            />
+          </div>
+        </div>
+
+        <h3 style={{ marginTop: 24 }}>Seite 2</h3>
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">Bio *</label>
+          <textarea
+            className="big-textarea"
+            placeholder="BIO …"
+            rows={8}
+            value={bioBlock}
+            onChange={(e) => setBioBlock(e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">Reportaout *</label>
+          <textarea
+            className="big-textarea"
+            placeholder="Repertoire …"
+            rows={6}
+            value={repertoireBlock}
+            onChange={(e) => setRepertoireBlock(e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">Tech Rider *</label>
+          <textarea
+            className="big-textarea"
+            placeholder="Technische Anforderungen …"
+            rows={6}
+            value={riderBlock}
+            onChange={(e) => setRiderBlock(e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label className="label">Portrait Seite 2 *</label>
+          <div className="photo-drop">
+            <input type="file" accept="image/*" required onChange={portraitPhotoChange} />
+            <small className="muted">JPG oder PNG.</small>
+            {portraitPhotoUrl && (
+              <div style={{ marginTop: 8 }}>
+                <img src={portraitPhotoUrl} alt="Vorschau Seite 2" className="preview" />
+              </div>
+            )}
+          </div>
+        </div>
+
+
+        <div className="field">
+          <label className="label">Hero Foto *</label>
           <div className="photo-drop">
             <input type="file" accept="image/*" onChange={onPhotoChange} />
-            <small className="muted">JPG oder PNG. Zuschnitt im nächsten Schritt. Ziel-Format: 4:5 (Portrait).</small>
+            <small className="muted">JPG oder PNG. Ziel-Format: 4:5.</small>
 
             {photoUrl && (
               <div style={{ marginTop: 12 }}>
@@ -256,6 +385,9 @@ export default function MediaKit() {
             )}
           </div>
         </div>
+
+
+
 
         <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
           <button type="submit" className="btn primary generate-btn" disabled={busy}>

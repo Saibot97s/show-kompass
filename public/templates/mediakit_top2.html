@@ -1,20 +1,19 @@
-<!-- mediakit.html -->
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <title>Media Kit</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Media Kit – Cover (DJ)</title>
   <style>
-    *,*::before,*::after{ box-sizing:border-box; }
-    .doc { width:794px; }                 /* A4 @ 96dpi */
+    /* Global: konsistente Box-Berechnung */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    /* A4 @ 96dpi – feste Maße */
     .page{
       position:relative; width:794px; height:1123px;
-      background:#fff; margin:0;          /* jede Seite exakt A4 hoch */
-      /* erzwungener Umbruch nach jeder Seite, außer der letzten */
-      break-after: page; page-break-after: always;
+      background:#fff; color:#0b1120;
+      font-family: ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;
     }
-    .page:last-child{ break-after:auto; page-break-after:auto; }
-
 
     /* === HERO (1:1) === */
     .hero{
@@ -93,30 +92,6 @@
       word-break:break-all; /* lange URLs umbrechen */
     }
     .cta-link:visited{ color:#6b7280; }
-    
-    
-    /* === Seite 2 (drei fixe Bänder) === */
-.p2-top{ position:absolute; left:0; right:0; top:0; height:500px; background:#0b0b0e; color:#fff; }
-.p2-mid{ position:absolute; left:0; right:0; top:500px; height:300px; background:#7e22ce; color:#fff; }
-.p2-bot{ position:absolute; left:0; right:0; top:800px; height:323px; background:#ffffff; color:#0b1120; }
-
-/* TOP-Bereich: BIO links Text, rechts 1:1 Foto */
-.p2-top .wrap{ position:absolute; inset:0; padding:56px 60px; }
-.p2-title{ font-weight:900; letter-spacing:.01em; margin:0; }
-.p2-title.bio{ font-size:86px; line-height:1; }
-.p2-text{ margin-top:22px; font-size:14px; line-height:1.75; color:#e5e7eb; max-width:470px; white-space:pre-line; }
-.p2-photo{ position:absolute; right:60px; top:90px; width:320px; height:320px; overflow:hidden; }
-.p2-photo img{ width:100%; height:100%; object-fit:cover; filter:grayscale(100%); display:block; }
-
-/* MID-Bereich: Repertoire (weiß auf violett) */
-.p2-mid .wrap{ position:absolute; inset:0; padding:44px 60px; }
-.p2-title.rep{ font-size:72px; line-height:1; color:#fff; }
-.p2-text.rep{ color:#fff; opacity:.95; max-width:640px; }
-
-/* BOT-Bereich: Tech Rider (schwarz auf weiß) */
-.p2-bot .wrap{ position:absolute; inset:0; padding:44px 60px; }
-.p2-title.rider{ font-size:64px; line-height:1; color:#0b1120; }
-.p2-text.rider{ color:#111827; max-width:640px; }
 
     /* Druckfarben erhalten und Link klar lesbar machen */
     @media print{
@@ -129,7 +104,7 @@
   <section class="page">
     <!-- HERO -->
     <div class="hero">
-      <img src="{{photoDataUrl}}"
+      <img src="https://cdn.pixabay.com/photo/2016/03/26/22/32/fast-1281628_1280.jpg"
            alt="Hero Foto von {{name}}" loading="eager" decoding="async">
       <div class="name">{{name}}</div>
       <div class="gradient" aria-hidden="true"></div>
@@ -156,35 +131,5 @@
       </div>
     </div>
   </section>
-  
-  
-<section class="page">
-<!-- TOP: BIO auf Schwarz, Foto rechts (1:1) -->
-<div class="p2-top">
-<div class="wrap">
-<h2 class="p2-title bio">BIO</h2>
-<div class="p2-text">{{bioBlock}}</div>
-<div class="p2-photo">
-<img src="{{page2ImageUrl}}" alt="{{name}} – Portrait">
-</div>
-</div>
-</div>
-
-<!-- MID: Repertoire auf Violett -->
-<div class="p2-mid">
-<div class="wrap">
-<h2 class="p2-title rep">Repertoire</h2>
-<div class="p2-text rep">{{repertoireBlock}}</div>
-</div>
-</div>
-
-<!-- BOT: Tech Rider auf Weiß -->
-<div class="p2-bot">
-<div class="wrap">
-<h2 class="p2-title rider">Tech Rider</h2>
-<div class="p2-text rider">{{riderBlock}}</div>
-</div>
-</div>
-</section>
 </body>
 </html>
