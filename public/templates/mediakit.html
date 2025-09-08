@@ -5,16 +5,25 @@
   <meta charset="utf-8" />
   <title>Media Kit</title>
   <style>
+
+    :root{
+      --c1:#0ea5e9;
+      --c2:#111827;
+      --c3:#f3f4f6;
+      --on-c1:#ffffff;
+      --on-c2:#ffffff;
+      --on-c3:#111827;
+    }
+
     *,*::before,*::after{ box-sizing:border-box; }
-    .doc { width:794px; }                 /* A4 @ 96dpi */
+    .doc { width:794px; } /* A4 @ 96dpi */
+
     .page{
       position:relative; width:794px; height:1123px;
-      background:#fff; margin:0;          /* jede Seite exakt A4 hoch */
-      /* erzwungener Umbruch nach jeder Seite, außer der letzten */
-      break-after: page; page-break-after: always;
+      background:#fff; margin:0;
+      break-after: page; page-break-after: always; /* erzwungener Umbruch */
     }
     .page:last-child{ break-after:auto; page-break-after:auto; }
-
 
     /* === HERO (1:1) === */
     .hero{
@@ -27,19 +36,19 @@
     }
     .hero .gradient{
       position:absolute; left:0; right:0; bottom:0; height:45%;
-      background:linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,0,0));
       pointer-events:none;
     }
     .name{
       position:absolute; left:28px; right:28px; bottom:30px;
-      color:#fff; font-weight:900; font-size:100px; line-height:.9; letter-spacing:.3px;
+      color:var(--c1); font-weight:900; font-size:100px; line-height:.9; letter-spacing:.3px;
       text-shadow:0 4px 22px rgba(0,0,0,.6);
     }
 
-    /* === SCHWARZER CLAIM-BALKEN === */
+    /* === CLAIM-BAND === */
     .band{
       position:absolute; left:0; right:0; top:794px; height:45px;
-      background:#0b0b0e; color:#fff; display:flex; align-items:center; justify-content:center;
+      background:var(--c2); color:var(--on-c2);
+      display:flex; align-items:center; justify-content:center;
       padding:0 24px; font-weight:700; font-size:20px; letter-spacing:.2px; text-align:center;
     }
     .band:empty::before{ content:"\00a0"; }
@@ -53,70 +62,77 @@
 
     /* Linke Karte: Titel oben, Kontakt unten und nach oben wachsend */
     .left-card{
-      background:#f4a259; color:#fff; padding:28px;
+      background:var(--c1); color:var(--on-c1); padding:28px;
       display:flex; flex-direction:column;
       height:100%; min-height:0;
     }
     .mk-title{ font-size:56px; line-height:.95; font-weight:900; letter-spacing:.02em; }
     .contact{
-      margin-top:auto; /* an den unteren Rand drücken */
+      margin-top:auto;
       white-space:pre-line; /* {{contact}}: Zeilenumbrüche respektieren */
-      font-size:15px; line-height:1.9; font-weight:600; opacity:.98;
+      font-size:15px; line-height:1.2; font-weight:400; opacity:.98;
     }
 
     /* Rechte Karte */
     .right{
-      background:#fff; color:#0b1120; padding:28px 34px;
+      background:var(--c3); color:#0b1120; padding:28px 34px;
       display:grid; grid-template-rows:1fr auto 1fr auto; row-gap:12px;
       height:100%; min-height:0;
     }
     .herotext{
-      grid-row:2; align-self:center; /* Block selbst zentriert */
-      white-space:pre-line; /* {{herotext}}: respektiert \n */
+      grid-row:2; align-self:center;
+      white-space:pre-line; /* {{herotext}} respektiert \n */
       font-size:14px; line-height:1.75; color:#111827;
     }
 
-    /* Unterer Bereich: CTA fix unten + Link darunter (anklickbar + druckbar) */
+    /* Unterer Bereich: CTA fix unten + Link darunter */
     .cta-wrap{
-      grid-row:4; display:flex; flex-direction:column; justify-content:flex-end; align-items:center;
-      gap:8px;
+      grid-row:4; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:8px;
     }
     .cta{
       display:inline-block; padding:14px 28px; border-radius:999px;
-      background:#f4a259; color:#fff; font-weight:800; font-size:18px;
+      background:var(--c1); color:var(--on-c1); font-weight:800; font-size:18px;
       text-decoration:none; letter-spacing:.2px;
     }
     .cta:hover{ filter:brightness(.95); }
 
     .cta-link{
       font-size:13px; color:#6b7280; text-decoration:underline; text-underline-offset:2px;
-      word-break:break-all; /* lange URLs umbrechen */
+      word-break:break-all;
     }
     .cta-link:visited{ color:#6b7280; }
-    
-    
-    /* === Seite 2 (drei fixe Bänder) === */
-.p2-top{ position:absolute; left:0; right:0; top:0; height:500px; background:#0b0b0e; color:#fff; }
-.p2-mid{ position:absolute; left:0; right:0; top:500px; height:300px; background:#7e22ce; color:#fff; }
-.p2-bot{ position:absolute; left:0; right:0; top:800px; height:323px; background:#ffffff; color:#0b1120; }
 
-/* TOP-Bereich: BIO links Text, rechts 1:1 Foto */
+    /* === Seite 2 (drei fixe Bänder) === */
+    .p2-top{ position:absolute; left:0; right:0; top:0;    height:500px; background:var(--c2); color:var(--on-c2); }
+    .p2-mid{ position:absolute; left:0; right:0; top:500px; height:300px; background:var(--c1); color:var(--on-c1); }
+    .p2-bot{ position:absolute; left:0; right:0; top:800px; height:323px; background:var(--c3); color:var(--on-c3); }
+
+    /* TOP-Bereich: BIO links Text, rechts 1:1 Foto */
+/* TOP-Bereich: BIO links Text, rechts Bild (1:1) */
 .p2-top .wrap{ position:absolute; inset:0; padding:56px 60px; }
-.p2-title{ font-weight:900; letter-spacing:.01em; margin:0; }
-.p2-title.bio{ font-size:86px; line-height:1; }
-.p2-text{ margin-top:22px; font-size:14px; line-height:1.75; color:#e5e7eb; max-width:470px; white-space:pre-line; }
+
+/* Titel und Text bekommen rechts Platz für das Bild (320px) + 40px Luft */
+.p2-title.bio{ margin-right: calc(320px + 40px); }
+.p2-text{
+  margin-top:22px;
+  font-size:14px; line-height:1.75; color:var(--on-c2); opacity:.85;
+  white-space:pre-line;
+  max-width: calc(100% - (320px + 40px)); /* statt fixer 470px */
+}
+
+/* Bild bleibt absolut rechts, füllt sein Quadrat sicher aus */
 .p2-photo{ position:absolute; right:60px; top:90px; width:320px; height:320px; overflow:hidden; }
 .p2-photo img{ width:100%; height:100%; object-fit:cover; filter:grayscale(100%); display:block; }
 
-/* MID-Bereich: Repertoire (weiß auf violett) */
-.p2-mid .wrap{ position:absolute; inset:0; padding:44px 60px; }
-.p2-title.rep{ font-size:72px; line-height:1; color:#fff; }
-.p2-text.rep{ color:#fff; opacity:.95; max-width:640px; }
+    /* MID-Bereich: Repertoire */
+    .p2-mid .wrap{ position:absolute; inset:0; padding:44px 60px; }
+    .p2-title.rep{ font-size:72px; line-height:1; color:var(--on-c1); }
+    .p2-text.rep{ color:var(--on-c1); opacity:.95; max-width:640px; }
 
-/* BOT-Bereich: Tech Rider (schwarz auf weiß) */
-.p2-bot .wrap{ position:absolute; inset:0; padding:44px 60px; }
-.p2-title.rider{ font-size:64px; line-height:1; color:#0b1120; }
-.p2-text.rider{ color:#111827; max-width:640px; }
+    /* BOT-Bereich: Tech Rider */
+    .p2-bot .wrap{ position:absolute; inset:0; padding:44px 60px; }
+    .p2-title.rider{ font-size:64px; line-height:1; color:var(--on-c3); }
+    .p2-text.rider{ color:var(--on-c3); max-width:640px; }
 
     /* Druckfarben erhalten und Link klar lesbar machen */
     @media print{
@@ -129,13 +145,12 @@
   <section class="page">
     <!-- HERO -->
     <div class="hero">
-      <img src="{{photoDataUrl}}"
-           alt="Hero Foto von {{name}}" loading="eager" decoding="async">
+      <img src="{{photoDataUrl}}" alt="Hero Foto von {{name}}" loading="eager" decoding="async">
       <div class="name">{{name}}</div>
       <div class="gradient" aria-hidden="true"></div>
     </div>
 
-    <!-- SCHWARZER BALKEN -->
+    <!-- CLAIM-BAND -->
     <div class="band">{{tagline}}</div>
 
     <!-- UNTERER SPLIT -->
@@ -156,35 +171,34 @@
       </div>
     </div>
   </section>
-  
-  
-<section class="page">
-<!-- TOP: BIO auf Schwarz, Foto rechts (1:1) -->
-<div class="p2-top">
-<div class="wrap">
-<h2 class="p2-title bio">BIO</h2>
-<div class="p2-text">{{bioBlock}}</div>
-<div class="p2-photo">
-<img src="{{page2ImageUrl}}" alt="{{name}} – Portrait">
-</div>
-</div>
-</div>
 
-<!-- MID: Repertoire auf Violett -->
-<div class="p2-mid">
-<div class="wrap">
-<h2 class="p2-title rep">Repertoire</h2>
-<div class="p2-text rep">{{repertoireBlock}}</div>
-</div>
-</div>
+  <section class="page">
+    <!-- TOP: BIO -->
+    <div class="p2-top">
+      <div class="wrap">
+        <h2 class="p2-title bio">BIO</h2>
+        <div class="p2-text">{{bioBlock}}</div>
+        <div class="p2-photo">
+          <img src="{{page2ImageUrl}}" alt="{{name}} – Portrait">
+        </div>
+      </div>
+    </div>
 
-<!-- BOT: Tech Rider auf Weiß -->
-<div class="p2-bot">
-<div class="wrap">
-<h2 class="p2-title rider">Tech Rider</h2>
-<div class="p2-text rider">{{riderBlock}}</div>
-</div>
-</div>
-</section>
+    <!-- MID: Repertoire -->
+    <div class="p2-mid">
+      <div class="wrap">
+        <h2 class="p2-title rep">Repertoire</h2>
+        <div class="p2-text rep">{{repertoireBlock}}</div>
+      </div>
+    </div>
+
+    <!-- BOT: Tech Rider -->
+    <div class="p2-bot">
+      <div class="wrap">
+        <h2 class="p2-title rider">Tech Rider</h2>
+        <div class="p2-text rider">{{riderBlock}}</div>
+      </div>
+    </div>
+  </section>
 </body>
 </html>

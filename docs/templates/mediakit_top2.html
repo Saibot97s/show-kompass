@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Media Kit – Cover (DJ)</title>
+  <style>
+    /* Global: konsistente Box-Berechnung */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    /* A4 @ 96dpi – feste Maße */
+    .page{
+      position:relative; width:794px; height:1123px;
+      background:#fff; color:#0b1120;
+      font-family: ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;
+    }
+
+    /* === HERO (1:1) === */
+    .hero{
+      position:absolute; left:0; right:0; top:0; height:794px; /* 1:1 */
+      overflow:hidden; background:#e5e7eb;
+    }
+    .hero img{
+      position:absolute; inset:0; width:100%; height:100%;
+      object-fit:cover; filter:grayscale(100%); display:block;
+    }
+    .hero .gradient{
+      position:absolute; left:0; right:0; bottom:0; height:45%;
+      background:linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,0,0));
+      pointer-events:none;
+    }
+    .name{
+      position:absolute; left:28px; right:28px; bottom:30px;
+      color:#fff; font-weight:900; font-size:100px; line-height:.9; letter-spacing:.3px;
+      text-shadow:0 4px 22px rgba(0,0,0,.6);
+    }
+
+    /* === SCHWARZER CLAIM-BALKEN === */
+    .band{
+      position:absolute; left:0; right:0; top:794px; height:45px;
+      background:#0b0b0e; color:#fff; display:flex; align-items:center; justify-content:center;
+      padding:0 24px; font-weight:700; font-size:20px; letter-spacing:.2px; text-align:center;
+    }
+    .band:empty::before{ content:"\00a0"; }
+
+    /* === UNTERER BEREICH (fixe Höhe) === */
+    .lower{
+      position:absolute; left:0; right:0; top:839px; height:284px; /* 1123 - (794+45) */
+      display:grid; grid-template-columns:.9fr 1.4fr;
+      align-items:stretch;
+    }
+
+    /* Linke Karte: Titel oben, Kontakt unten und nach oben wachsend */
+    .left-card{
+      background:#f4a259; color:#fff; padding:28px;
+      display:flex; flex-direction:column;
+      height:100%; min-height:0;
+    }
+    .mk-title{ font-size:56px; line-height:.95; font-weight:900; letter-spacing:.02em; }
+    .contact{
+      margin-top:auto; /* an den unteren Rand drücken */
+      white-space:pre-line; /* {{contact}}: Zeilenumbrüche respektieren */
+      font-size:15px; line-height:1.9; font-weight:600; opacity:.98;
+    }
+
+    /* Rechte Karte */
+    .right{
+      background:#fff; color:#0b1120; padding:28px 34px;
+      display:grid; grid-template-rows:1fr auto 1fr auto; row-gap:12px;
+      height:100%; min-height:0;
+    }
+    .herotext{
+      grid-row:2; align-self:center; /* Block selbst zentriert */
+      white-space:pre-line; /* {{herotext}}: respektiert \n */
+      font-size:14px; line-height:1.75; color:#111827;
+    }
+
+    /* Unterer Bereich: CTA fix unten + Link darunter (anklickbar + druckbar) */
+    .cta-wrap{
+      grid-row:4; display:flex; flex-direction:column; justify-content:flex-end; align-items:center;
+      gap:8px;
+    }
+    .cta{
+      display:inline-block; padding:14px 28px; border-radius:999px;
+      background:#f4a259; color:#fff; font-weight:800; font-size:18px;
+      text-decoration:none; letter-spacing:.2px;
+    }
+    .cta:hover{ filter:brightness(.95); }
+
+    .cta-link{
+      font-size:13px; color:#6b7280; text-decoration:underline; text-underline-offset:2px;
+      word-break:break-all; /* lange URLs umbrechen */
+    }
+    .cta-link:visited{ color:#6b7280; }
+
+    /* Druckfarben erhalten und Link klar lesbar machen */
+    @media print{
+      *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+      .cta-link{ color:#000; text-decoration:underline; }
+    }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <!-- HERO -->
+    <div class="hero">
+      <img src="https://cdn.pixabay.com/photo/2016/03/26/22/32/fast-1281628_1280.jpg"
+           alt="Hero Foto von {{name}}" loading="eager" decoding="async">
+      <div class="name">{{name}}</div>
+      <div class="gradient" aria-hidden="true"></div>
+    </div>
+
+    <!-- SCHWARZER BALKEN -->
+    <div class="band">{{tagline}}</div>
+
+    <!-- UNTERER SPLIT -->
+    <div class="lower">
+      <!-- Links -->
+      <div class="left-card">
+        <div class="mk-title">MEDIA<br>KIT</div>
+        <div class="contact">{{contact}}</div>
+      </div>
+
+      <!-- Rechts -->
+      <div class="right">
+        <div class="herotext">{{herotext}}</div>
+        <div class="cta-wrap">
+          <a class="cta" href="{{ctaUrl}}" target="_blank" rel="noopener">{{ctaLabel}}</a>
+          <a class="cta-link" href="{{ctaUrl}}" target="_blank" rel="noopener">{{ctaUrl}}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

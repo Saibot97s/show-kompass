@@ -69,7 +69,7 @@ export default function Home() {
           {/* Media right */}
           <div className="hero-media">
             <div className="device img-overlay" role="img" aria-label="Vorschau deines Media Kits">
-              <img className="device-img" src="img2.jpeg" alt="Mediakit Vorschau" loading="eager" />
+              <img className="device-img" src={import.meta.env.BASE_URL + 'img2.jpeg'} alt="Mediakit Vorschau" loading="eager" />
               <button
                 className="play-btn play-btn--center"
                 aria-label="Vorschauvideo abspielen"
@@ -116,7 +116,7 @@ export default function Home() {
       <section className="container section" aria-labelledby="mediakit-title">
         <div className="responsivegridL">
           <div className='hide-on-mobile'>
-            <img src="/mediakit-sample.png" alt="Beispiel eines Mediakit" style={{ width: '100%', borderRadius: '12px' }} />
+            <img src={import.meta.env.BASE_URL + '/mediakit-sample.png'} alt="Beispiel eines Mediakit" style={{ width: '100%', borderRadius: '12px' }} />
           </div>
           <div>
             <h2 id="mediakit-title">Was ist ein Mediakit?</h2>
@@ -198,7 +198,7 @@ export default function Home() {
 
           <div>
             <img
-              src="/sirus-portrait.jpg"
+              src={import.meta.env.BASE_URL + '/sirus-portrait.jpg'}
               alt="Sirus – Kunstpfeiffer, Business-Mensch und Bestseller-Autor"
               style={{ width: '100%', borderRadius: '12px', boxShadow: '0 6px 20px rgba(0,0,0,0.1)' }}
             />
@@ -209,21 +209,6 @@ export default function Home() {
         {/* LOGO-REIHE – sehr schmales Foto */}
         <LogoLeiste></LogoLeiste>
       </section>
-
-
-
-      {/* BENEFITS */}
-      {/*
-      <section className="container section" aria-labelledby="benefits-title">
-        <h2 id="benefits-title">Was ist ein Media Kit und was sind die Vorteile?</h2>
-        <div className="benefits-grid">
-          <div className="benefit"><div className="benefit-icon">💡</div>Schritt für Schitt zu deinem eigenen Mediakit</div>
-          <div className="benefit"><div className="benefit-icon">🎵</div>Praxisnah und speziell für Musiker & DJs</div>
-          <div className="benefit"><div className="benefit-icon">⭐⭐⭐⭐⭐</div>Top Bewertung von über 300 KundInnen</div>
-          <div className="benefit"><div className="benefit-icon">🚀</div>Direkt umsetzbares Wissen für deinen Karriereweg</div>
-          <div className="benefit"><div className="benefit-icon">📜</div>Steuertipps, Vorlagen und vieles mehr</div>
-        </div>
-      </section>  */}
 
       <section className="section" aria-label="Problem-Lösung-Vergleich">
         <div className="container">
@@ -323,7 +308,7 @@ export default function Home() {
           {/* Links: Produktmockup */}
           <div className="cta-left">
             <img
-              src="/mockup-mediakit.png"
+              src={import.meta.env.BASE_URL + '/mockup-mediakit.png'}
               alt="Produktmockup: Mediakit-Generator"
             />
           </div>
@@ -369,14 +354,19 @@ export default function Home() {
         </div>
       </section>
 
+      <div className="actions">
+        <Link to="/mediakit" className="btn primary">Mediakit</Link>
+      </div>
+
 
       {/* KURSE */}
+      {/*
       <section id="kurse" className="container section" aria-labelledby="kurse-title">
         <h2 id="kurse-title">Vielleicht ineressieren dich auch unsere Kurse:</h2>
         <div className="grid">
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Steuern & Finanzen">
-              <img src="/kurse/sales.jpeg" alt="Kursbild: Marketing & Sales" loading="lazy" />
+              <img src={import.meta.env.BASE_URL + '/kurse/sales.jpeg'} alt="Kursbild: Marketing & Sales" loading="lazy" />
             </div>
             <div className="content">
               <div className="title">Marketing & Sales</div>
@@ -389,7 +379,7 @@ export default function Home() {
           </article>
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Marketing und Vertrieb">
-              <img src="/kurse/finanzen.jpeg" alt="Kursbild: Marketing & Sales" loading="lazy" />
+              <img src={import.meta.env.BASE_URL + '/kurse/finanzen.jpeg'} alt="Kursbild: Marketing & Sales" loading="lazy" />
 
             </div>
             <div className="content">
@@ -403,7 +393,7 @@ export default function Home() {
           </article>
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Bühnenshows und Entertainment">
-              <img src="/kurse/workflow.jpeg" alt="Kursbild – Bühnenshows und Entertainment" loading="lazy" />
+              <img src={import.meta.env.BASE_URL + 'kurse/workflow.jpeg'} alt="Kursbild – Bühnenshows und Entertainment" loading="lazy" />
 
             </div>
             <div className="content">
@@ -417,7 +407,7 @@ export default function Home() {
           </article>
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Steuern & Finanzen">
-              <img src="/kurse/showact.jpeg" alt="Kursbild: Marketing & Sales" loading="lazy" />
+              <img src={import.meta.env.BASE_URL + '/kurse/showact.jpeg'} alt="Kursbild: Marketing & Sales" loading="lazy" />
             </div>
             <div className="content">
               <div className="title">Showact & Entertainment</div>
@@ -431,7 +421,7 @@ export default function Home() {
         </div>
       </section>
 
-
+      */}
       <PreviewModal open={showPreview} onClose={() => setShowPreview(false)} />
     </main>
   )
