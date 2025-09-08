@@ -116,7 +116,7 @@ export default function Home() {
       <section className="container section" aria-labelledby="mediakit-title">
         <div className="responsivegridL">
           <div className='hide-on-mobile'>
-            <img src={import.meta.env.BASE_URL + '/mediakit-sample.png'} alt="Beispiel eines Mediakit" style={{ width: '100%', borderRadius: '12px' }} />
+            <img src={import.meta.env.BASE_URL + 'mediakit-sample.png'} alt="Beispiel eines Mediakit" style={{ width: '100%', borderRadius: '12px' }} />
           </div>
           <div>
             <h2 id="mediakit-title">Was ist ein Mediakit?</h2>
@@ -198,7 +198,7 @@ export default function Home() {
 
           <div>
             <img
-              src={import.meta.env.BASE_URL + '/sirus-portrait.jpg'}
+              src={import.meta.env.BASE_URL + 'sirus-portrait.jpg'}
               alt="Sirus – Kunstpfeiffer, Business-Mensch und Bestseller-Autor"
               style={{ width: '100%', borderRadius: '12px', boxShadow: '0 6px 20px rgba(0,0,0,0.1)' }}
             />
@@ -308,7 +308,7 @@ export default function Home() {
           {/* Links: Produktmockup */}
           <div className="cta-left">
             <img
-              src={import.meta.env.BASE_URL + '/mockup-mediakit.png'}
+              src={import.meta.env.BASE_URL + 'mockup-mediakit.png'}
               alt="Produktmockup: Mediakit-Generator"
             />
           </div>

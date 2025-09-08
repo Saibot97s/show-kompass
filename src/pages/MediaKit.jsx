@@ -533,7 +533,7 @@ for (let i = 0; i < pages.length; i++) {
         </div>
 
         <div className="field">
-          <label htmlFor="tagline" className="label">Reportaout *</label>
+          <label htmlFor="tagline" className="label">Repertoire *</label>
           <textarea
             className="big-textarea"
             placeholder="Repertoire …"
