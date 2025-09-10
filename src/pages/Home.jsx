@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PreviewModal from '../components/PreviewModal'
 import LogoLeiste from '../components/LogoLeiste'
+import SignupForm from "../components/SignupForm";
 
 export default function Home() {
   const [showPreview, setShowPreview] = useState(false)
@@ -32,27 +33,7 @@ export default function Home() {
             <br />
 
             {/* CTA */}
-            <form
-              className="cta-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                // TODO: handle subscribe + redirect/open generator
-              }}
-            >
-              <label htmlFor="cta-email" className="sr-only">E-Mail</label>
-              <input
-                id="cta-email"
-                type="email"
-                inputMode="email"
-                name="email"
-                placeholder="Deine E-Mail-Adresse"
-                required
-                aria-required="true"
-              />
-              <button type="submit" aria-label="Jetzt kostenlos starten">
-                Jetzt kostenlos starten
-              </button>
-            </form>
+            <SignupForm className="cta-form" />
 
             <br />
             <div className="proof" aria-live="polite">
@@ -328,36 +309,10 @@ export default function Home() {
               <li>Export als Link oder PDF</li>
               <li>Bewährte Layouts für Booking & PR</li>
             </ul>
-
-            <form
-              className="cta-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                // TODO: handle subscribe + redirect/open generator
-              }}
-            >
-              <label htmlFor="cta-email" className="sr-only">E‑Mail</label>
-              <input
-                id="cta-email"
-                type="email"
-                inputMode="email"
-                name="email"
-                placeholder="Deine E‑Mail-Adresse"
-                required
-                aria-required="true"
-              />
-              <button type="submit">
-                Jetzt kostenlos starten
-              </button>
-            </form>
+                <SignupForm className="cta-form" />
           </div>
         </div>
       </section>
-
-      <div className="actions">
-        <Link to="/mediakit" className="btn primary">Mediakit</Link>
-      </div>
-
 
       {/* KURSE */}
       {/*
