@@ -8,6 +8,13 @@ const TEMPLATE_URL = "/templates/mediakit.html";
 const HERO_ASPECT = 1 / 1;
 const PORTRAIT_ASPECT = 3 / 4;
 
+function isIOS() {
+  const ua = navigator.userAgent || "";
+  const iOSDevice = /iPad|iPhone|iPod/.test(ua);
+  const iPadOS = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+  return iOSDevice || iPadOS;
+}
+
 const COLOR_TEMPLATES = [
   {
     id: "ocean", name: "Ocean",
@@ -293,7 +300,16 @@ export default function MediaKit() {
       // Auf Bilder warten (je Seite)
       for (const p of pages) await waitForImages(p);
 
-      // 5) PDF erstellen (A4 mm)
+// **WICHTIG**: neuen Tab sofort öffnen, solange noch im User-Gesture
+const previewTab = window.open("", "_blank", "noopener,noreferrer");
+if (previewTab) {
+  // Optional: kurzer Platzhalter (verhindert "leere Seite")
+  previewTab.document.title = "PDF wird vorbereitet …";
+  previewTab.document.body.innerHTML =
+    '<p style="font: 14px system-ui; padding:16px">PDF wird vorbereitet …</p>';
+}
+
+// 5) PDF erstellen (A4 mm)
 const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
 
 for (let i = 0; i < pages.length; i++) {
@@ -308,39 +324,55 @@ for (let i = 0; i < pages.length; i++) {
   });
   const imgData = canvas.toDataURL("image/jpeg", 0.98);
 
-  const pageW = pdf.internal.pageSize.getWidth();  // 210 mm
-  const pageH = pdf.internal.pageSize.getHeight(); // 297 mm
+  const pageW = pdf.internal.pageSize.getWidth();
+  const pageH = pdf.internal.pageSize.getHeight();
 
   if (i > 0) pdf.addPage();
   pdf.addImage(imgData, "JPEG", 0, 0, pageW, pageH, undefined, "FAST");
 
-  // === CTA-Link-Annotation (volle Buttonfläche) NUR für Seite 1 ===
+  // === CTA-Link-Annotation (Seite 1) ===
   if (i === 0) {
     const ctaEl = pageEl.querySelector(".cta");
-    const url = normalizeUrl(ctaUrl); // nimm den State-Wert
+    const url = normalizeUrl(ctaUrl);
     if (ctaEl && url) {
       const pr = pageEl.getBoundingClientRect();
       const br = ctaEl.getBoundingClientRect();
-
-      // DOM-Pixel → PDF-mm (proportional skaliert)
       const x = ((br.left - pr.left) / pr.width)  * pageW;
       const y = ((br.top  - pr.top)  / pr.height) * pageH;
       const w = (br.width  / pr.width)  * pageW;
       const h = (br.height / pr.height) * pageH;
-
       pdf.link(x, y, w, h, { url });
     }
   }
 }
 
-      pdf.save(`${slugify(name)}.pdf`);
-    } catch (err) {
-      console.error(err);
-      alert(err.message || "Fehler beim PDF-Export.");
-    } finally {
-      setBusy(false);
-    }
-  }
+// >>> statt pdf.save(...):
+const filename = `${slugify(name)}.pdf`;
+const blob = pdf.output("blob");
+const url = URL.createObjectURL(blob);
+
+// 1) Immer neuen Tab/Viewer öffnen (Wunsch)
+if (previewTab) {
+  // bereits geöffnet – jetzt auf die PDF umleiten
+  previewTab.location.href = url;
+} else {
+  // falls Blocker o. Ä.
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+
+// 2) Zusätzlich: echter Download auf Nicht-iOS
+if (!isIOS()) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+// URL nicht sofort widerrufen – der Tab braucht sie
+setTimeout(() => URL.revokeObjectURL(url), 120000);
+
 
 
   function onPhotoChange(e) {
