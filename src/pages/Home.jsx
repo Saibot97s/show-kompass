@@ -196,9 +196,9 @@ export default function Home() {
           <section className="flow-box" role="group">
 
             <div className="flow-cols" aria-label="Spaltenüberschriften">
-              <div className="colhead left"><span className="pill big">Ohne Mediakit</span></div>
+              <div className="colhead left"><span className="pill big">❌ Ohne Mediakit</span></div>
               <div className="colspacer" aria-hidden="true"></div>
-              <div className="colhead right"><span className="pill big good">Mit Mediakit</span></div>
+              <div className="colhead right"><span className="pill big good">✅ Mit Mediakit</span></div>
             </div>
 
             <div role="list">
@@ -221,7 +221,7 @@ export default function Home() {
 
                 </div>
                 <div className="s-card">
-                  <h3>📩  Leicht weiterzuempfehlen</h3>
+                  <h3>✅  Leicht weiterzuempfehlen</h3>
                   <p className="muted">ein PDF oder Link lässt sich schnell teilen. Mit einem Klick hat alle Infos immer verfügbar: digital/print.</p>
                 </div>
               </div>
@@ -246,7 +246,7 @@ export default function Home() {
 
                 </div>
                 <div className="s-card">
-                  <h3>👔 Professioneller Auftritt</h3>
+                  <h3>✅ Professioneller Auftritt</h3>
                   <p className="muted">Zeigt, dass du weißt, wie das Geschäft funktioniert. Biografie, Pressetexte, Bilder, Videos, Logos, Social Links und Kontaktdaten übersichtlich gebündelt.
                   </p>
                 </div>
@@ -273,7 +273,7 @@ export default function Home() {
 
                 </div>
                 <div className="s-card">
-                  <h3>🎥  Presse & PR ready</h3>
+                  <h3>✅  Presse & PR ready</h3>
                   <p className="muted">Journalist:innen, Blogger:innen, oder Radiostationen, etc. können direkt aus dem Kit zitieren, Fotos nutzen oder dich featuren. Reibungslose Kommunikation.</p>
                 </div>
               </div>
