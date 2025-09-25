@@ -8,10 +8,12 @@ export default function Header(){
           <div className="logo" aria-hidden="true" />
           <span>ShowKompass</span>
         </Link>
+        {/*
         <nav>
           <NavLink className="btn" to="/#kurse">Startseite</NavLink>
           <NavLink className="btn" to="/#kurse">Kontakt</NavLink>
         </nav>
+        */}
       </div>
     </header>
   )

@@ -1,8 +1,14 @@
-export default function Footer(){
-  const year = new Date().getFullYear()
+import { Link } from "react-router-dom";
+
+export default function Footer() {
+  const year = new Date().getFullYear();
   return (
     <footer id="kontakt" className="container">
-      <p>© <span>{year}</span> ShowKompass · Impressum · Datenschutz · v0.0.3</p>
+      <p>
+        © <span>{year}</span> ShowKompass ·{" "}
+        <a href="/privacy">Impressum & Datenschutz</a> &nbsp;
+        · v0.0.4
+      </p>
     </footer>
-  )
+  );
 }

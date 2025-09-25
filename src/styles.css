@@ -980,15 +980,15 @@ dialog {
 /* Logo Strip */
 .logos-strip {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 3px;
+  grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
+  gap: 50px;
   align-items: center;
 }
 
 .logo {
   height: 20px;
   width: auto;
-  max-width: 50px;
+  max-width: 70px;
   justify-self: center;
   display: block;
 }
@@ -1000,7 +1000,7 @@ dialog {
   }
 
   .logo {
-    height: 54px;
+    height: 64px;
   }
 }
 
@@ -1181,7 +1181,11 @@ h2 {
   height: auto;
   border-radius: 16px;
   transform: rotate(-2deg);
+  display: block;            /* macht das <img> block-level */
+  margin-inline: auto;       /* zentriert horizontal */
+  transform-origin: center;  /* Rotation um die Mitte (optional) */
 }
+
 
 /* Responsiv CTA */
 @media (max-width: 900px) {
@@ -1682,21 +1686,37 @@ h2 {
 }
 
 
+/* Bestehend: sichtbar auf Desktop/Tablet, auf Mobile ausgeblendet */
 .hide-on-mobile {
-  display: block;
-  /* Standard: sichtbar */
+  display: block; /* Standard: sichtbar */
 }
 
 @media (max-width: 768px) {
   .hide-on-mobile {
-    display: none !important;
-    /* Ab 768px und kleiner ausgeblendet */
+    display: none !important; /* ab 768px und kleiner ausgeblendet */
   }
 
-  .responsivegridR> :first-child {
-    order: 2;
-    /* Text geht nach unten */
+  .responsivegridR > :first-child {
+    order: 2; /* Text geht nach unten */
   }
+}
+
+/* Neu: nur auf Mobile sichtbar, sonst versteckt */
+.show-on-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .show-on-mobile {
+    display: block !important; /* bei Bedarf auf inline/inline-block/flex ändern */
+  }
+}
+
+/* Optional: Anzeige-Modifier für die Mobile-Variante */
+@media (max-width: 768px) {
+  .show-on-mobile.inline        { display: inline !important; }
+  .show-on-mobile.inline-block  { display: inline-block !important; }
+  .show-on-mobile.flex          { display: flex !important; }
 }
 
 /* --- MediaKit Form (große Inputs, sauberes Card-Layout) --- */

@@ -6,7 +6,6 @@ import React from "react";
 */
 export default function LogoLeiste() {
 const logos = [
-{ name: "IMDb", src: "https://commons.wikimedia.org/wiki/Special:FilePath/IMDB%20Logo%202016.svg" },
 { name: "DER STANDARD", src: "https://commons.wikimedia.org/wiki/Special:FilePath/DER%20STANDARD%20LOGO%20schwarz.svg" },
 { name: "Morawa", src: "https://commons.wikimedia.org/wiki/Special:FilePath/Morawa%20Logo.svg" },
 { name: "PULS 4", src: "https://commons.wikimedia.org/wiki/Special:FilePath/Puls%204%20Logo.svg" },
@@ -18,6 +17,12 @@ const logos = [
 { name: "Die Presse", src: "https://commons.wikimedia.org/wiki/Special:FilePath/Die%20Presse%20logo.svg" },
 { name: "ZDF", src: "https://commons.wikimedia.org/wiki/Special:FilePath/ZDF%20logo.svg" },
 ];
+
+/**
+ * { name: "IMDb", src: "https://commons.wikimedia.org/wiki/Special:FilePath/IMDB%20Logo%202016.svg" },
+
+ * 
+ */
 
 return (
 <section className="logos section" aria-label="Partner & Presse">

@@ -69,10 +69,6 @@ export default function Home() {
                 <span>Kostenlos starten</span>
               </div>
               <div className="mini">
-                <strong>15&nbsp;Min</strong>
-                <span>Zur fertigen Datei</span>
-              </div>
-              <div className="mini">
                 <strong>1-Klick</strong>
                 <span>PDF Export</span>
               </div>
@@ -179,7 +175,7 @@ export default function Home() {
 
           <div>
             <img
-              src={import.meta.env.BASE_URL + 'sirus-portrait.jpg'}
+              src={import.meta.env.BASE_URL + 'sirus-portrait.jpeg'}
               alt="Sirus – Kunstpfeiffer, Business-Mensch und Bestseller-Autor"
               style={{ width: '100%', borderRadius: '12px', boxShadow: '0 6px 20px rgba(0,0,0,0.1)' }}
             />
@@ -191,7 +187,7 @@ export default function Home() {
         <LogoLeiste></LogoLeiste>
       </section>
 
-      <section className="section" aria-label="Problem-Lösung-Vergleich">
+      <section className="section hide-on-mobile" aria-label="Problem-Lösung-Vergleich">
         <div className="container">
           <section className="flow-box" role="group">
 
@@ -283,6 +279,84 @@ export default function Home() {
       </section>
 
 
+ {/* SECTION FÜR MOBILE ONLY */}
+      <section className="section show-on-mobile" aria-label="Problem-Lösung-Vergleich">
+        <div className="container">
+          <section className="flow-box" role="group">
+
+            <div className="flow-cols" aria-label="Spaltenüberschriften">
+              <div className="colhead left"><span className="pill big">❌ Ohne Mediakit</span></div>
+            </div>
+
+            <div role="list">
+              <div className="flow-row" role="listitem">
+                <div className="p-card">
+                  <h3>❌  Viel Arbeit für Booker</h3>
+                  <p className="muted">Kein Media Kit = Zusatzaufwand. → Booking-Agenturen haben keine Zeit für langes Nachfragen.</p>
+                </div>
+              </div>
+
+              <hr className="divider" />
+
+              <div className="flow-row" role="listitem">
+                <div className="p-card">
+                  <h3>❌ Weniger Vertrauen & Glaubwürdigkeit</h3>
+                  <p className="muted">Ein fehlendes Media Kit wirkt wie fehlendes Business-Know-how → Booker zweifeln, ob du zuverlässig bist.</p>
+                </div>
+              </div>
+
+              <hr className="divider" />
+
+              <div className="flow-row" role="listitem">
+                <div className="p-card">
+                  <h3>❌ Schlechtere Vermarktungschancen</h3>
+                  <p className="muted">Presse oder Sponsoren brauchen Infos & Fotos sofort → ohne Kit bist du nicht „PR-fähig“</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section className="section show-on-mobile" aria-label="Problem-Lösung-Vergleich">
+        <div className="container">
+          <section className="flow-box" role="group">
+
+            <div className="flow-cols" aria-label="Spaltenüberschriften">
+              <div className="colhead right"><span className="pill big good">✅ Mit Mediakit</span></div>
+            </div>
+
+            <div role="list">
+              <div className="flow-row" role="listitem">
+                <div className="s-card">
+                  <h3>✅  Leicht weiterzuempfehlen</h3>
+                  <p className="muted">ein PDF oder Link lässt sich schnell teilen. Mit einem Klick hat alle Infos immer verfügbar: digital/print.</p>
+                </div>
+              </div>
+
+              <hr className="divider" />
+
+              <div className="flow-row" role="listitem">
+                <div className="s-card">
+                  <h3>✅ Professioneller Auftritt</h3>
+                  <p className="muted">Zeigt, dass du weißt, wie das Geschäft funktioniert. Biografie, Pressetexte, Bilder, Videos, Logos, Social Links und Kontaktdaten übersichtlich gebündelt.
+                  </p>
+                </div>
+              </div>
+
+              <hr className="divider" />
+
+              <div className="flow-row" role="listitem">
+                <div className="s-card">
+                  <h3>✅  Presse & PR ready</h3>
+                  <p className="muted">Journalist:innen, Blogger:innen, oder Radiostationen, etc. können direkt aus dem Kit zitieren, Fotos nutzen oder dich featuren. Reibungslose Kommunikation.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
       {/* SALES/CTA SECTION – farbig, prominent */}
       <section className="container section cta-hero" aria-labelledby="mediakit-cta">
         <div className="cta-wrap">
@@ -309,7 +383,7 @@ export default function Home() {
               <li>Export als Link oder PDF</li>
               <li>Bewährte Layouts für Booking & PR</li>
             </ul>
-                <SignupForm className="cta-form" />
+            <SignupForm className="cta-form" />
           </div>
         </div>
       </section>
