@@ -277,9 +277,6 @@ export default function MediaKit() {
         hiddenHostRef.current = host;
       }
 
-
-
-
       host.innerHTML = html;
 
       // nach host.innerHTML = html;
@@ -383,367 +380,366 @@ export default function MediaKit() {
     } finally {
       setBusy(false);
     }
+  }
+
+  function onPhotoChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result;
+      setRawPhotoUrl(dataUrl);
+      setCrop({ x: 0, y: 0 });
+      setZoom(1);
+      setCroppedPixels(null);
+      setCropOpen(true); // direkt Crop-Dialog öffnen
+    };
+    reader.readAsDataURL(file);
+  }
 
 
-    function onPhotoChange(e) {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        const dataUrl = reader.result;
-        setRawPhotoUrl(dataUrl);
-        setCrop({ x: 0, y: 0 });
-        setZoom(1);
-        setCroppedPixels(null);
-        setCropOpen(true); // direkt Crop-Dialog öffnen
-      };
-      reader.readAsDataURL(file);
+  function portraitPhotoChange(e) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      const dataUrl = String(r.result || "");
+      setRawPortraitPhotoUrl(dataUrl);
+      setPortraitCrop({ x: 0, y: 0 });
+      setPortraitZoom(1);
+      setPortraitCroppedPixels(null);
+      setPortraitCropOpen(true);
+    };
+    r.readAsDataURL(f);
+  }
+
+  async function confirmCrop() {
+    if (!rawPhotoUrl) return;
+    let pixels = croppedPixels;
+    if (!pixels) {
+      // Wenn der User nicht interagiert hat: gesamten Bildbereich verwenden
+      const img = await createImage(rawPhotoUrl);
+      pixels = { x: 0, y: 0, width: img.width, height: img.height };
+    }
+    const cropped = await getCroppedImg(rawPhotoUrl, pixels, "image/jpeg");
+    setPhotoUrl(cropped);
+    setCropOpen(false);
+  }
+
+  async function confirmPortraitCrop() {
+    if (!rawPortraitPhotoUrl) return;
+    let pixels = portraitCroppedPixels;
+
+    if (!pixels) {
+      const img = await createImage(rawPortraitPhotoUrl);
+      pixels = { x: 0, y: 0, width: img.width, height: img.height };
     }
 
+    const cropped = await getCroppedImg(rawPortraitPhotoUrl, pixels, "image/jpeg");
+    setPortraitPhotoUrl(cropped);
+    setPortraitCropOpen(false);
+  }
 
-    function portraitPhotoChange(e) {
-      const f = e.target.files?.[0];
-      if (!f) return;
-      const r = new FileReader();
-      r.onload = () => {
-        const dataUrl = String(r.result || "");
-        setRawPortraitPhotoUrl(dataUrl);
-        setPortraitCrop({ x: 0, y: 0 });
-        setPortraitZoom(1);
-        setPortraitCroppedPixels(null);
-        setPortraitCropOpen(true);
-      };
-      r.readAsDataURL(f);
-    }
+  return (
+    <main className="container section">
+      <h1 style={{ margin: 0 }}>Media-Kit Generator</h1>
+      <p className="" style={{ margin: "6px 0 0" }}>
+      </p>
 
-    async function confirmCrop() {
-      if (!rawPhotoUrl) return;
-      let pixels = croppedPixels;
-      if (!pixels) {
-        // Wenn der User nicht interagiert hat: gesamten Bildbereich verwenden
-        const img = await createImage(rawPhotoUrl);
-        pixels = { x: 0, y: 0, width: img.width, height: img.height };
-      }
-      const cropped = await getCroppedImg(rawPhotoUrl, pixels, "image/jpeg");
-      setPhotoUrl(cropped);
-      setCropOpen(false);
-    }
-
-    async function confirmPortraitCrop() {
-      if (!rawPortraitPhotoUrl) return;
-      let pixels = portraitCroppedPixels;
-
-      if (!pixels) {
-        const img = await createImage(rawPortraitPhotoUrl);
-        pixels = { x: 0, y: 0, width: img.width, height: img.height };
-      }
-
-      const cropped = await getCroppedImg(rawPortraitPhotoUrl, pixels, "image/jpeg");
-      setPortraitPhotoUrl(cropped);
-      setPortraitCropOpen(false);
-    }
-
-    return (
-      <main className="container section">
-        <h1 style={{ margin: 0 }}>Media-Kit Generator</h1>
-        <p className="" style={{ margin: "6px 0 0" }}>
-        </p>
-
-        <form className="form-card" onSubmit={onGenerate}>
+      <form className="form-card" onSubmit={onGenerate}>
 
 
 
-          <div className="field">
-            <label htmlFor="mk-name" className="label">Name *</label>
+        <div className="field">
+          <label htmlFor="mk-name" className="label">Name *</label>
+          <input
+            id="mk-name"
+            name="name"
+            className="big-input"
+            placeholder="Künstler*in / Bandname"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">Tagline *</label>
+          Beschreibe kurz in wenigen Worten was dich besonders macht.
+
+          <input
+            className="big-input"
+            placeholder="Jazz Cover-Songs für jedes Event"
+            value={tagline}
+            onChange={(e) => setTagline(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">Kurzbeschriebung Titelblatt</label>
+          <textarea
+            className="big-textarea"
+            placeholder={"[Name] verbindet druckvolle [Genre/Mix: z. B. Melodic & Tech House] mit organischen Samples und detailverliebten Arrangements. Ideal für [Event-Typ] und andere Events.\n \n Bekannt aus: Bekannt aus: [Sender 1] · [Zeitung 1]"}
+            rows={6}
+            value={heroText}
+            onChange={(e) => setHeroText(e.target.value)}
+          />
+        </div>
+
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">Kontakt *</label>
+          <textarea
+            className="big-textarea"
+            placeholder={"DEIN NAME\ndeine@email.com\n+00 000 000\nInsta @instagram\nTiktok @tiktok"}
+            rows={5}
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">CTA URL & LAbel *</label>
+          <div style={{ display: "flex", gap: 8 }}>
             <input
-              id="mk-name"
-              name="name"
               className="big-input"
-              placeholder="Künstler*in / Bandname"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              placeholder="https://…"
+              value={ctaUrl}
+              onChange={(e) => setCtaUrl(e.target.value)}
+              style={{ flex: 2 }}
             />
-          </div>
-
-
-          <div className="field">
-            <label htmlFor="tagline" className="label">Tagline *</label>
-            Beschreibe kurz in wenigen Worten was dich besonders macht.
-
             <input
               className="big-input"
-              placeholder="Jazz Cover-Songs für jedes Event"
-              value={tagline}
-              onChange={(e) => setTagline(e.target.value)}
-              required
+              placeholder="Button-Text"
+              value={ctaLabel}
+              onChange={(e) => setCtaLabel(e.target.value)}
+              style={{ flex: 1 }}
             />
           </div>
+        </div>
 
-          <div className="field">
-            <label htmlFor="tagline" className="label">Kurzbeschriebung Titelblatt</label>
-            <textarea
-              className="big-textarea"
-              placeholder={"[Name] verbindet druckvolle [Genre/Mix: z. B. Melodic & Tech House] mit organischen Samples und detailverliebten Arrangements. Ideal für [Event-Typ] und andere Events.\n \n Bekannt aus: Bekannt aus: [Sender 1] · [Zeitung 1]"}
-              rows={6}
-              value={heroText}
-              onChange={(e) => setHeroText(e.target.value)}
-            />
-          </div>
+        <div className="field">
+          <label htmlFor="mk-bio" className="label">Bio * (300–400 Wörter)</label>
+          <div className="collapsible-box">
+            <CollapsibleText collapsedLines={1}>
 
-
-          <div className="field">
-            <label htmlFor="tagline" className="label">Kontakt *</label>
-            <textarea
-              className="big-textarea"
-              placeholder={"DEIN NAME\ndeine@email.com\n+00 000 000\nInsta @instagram\nTiktok @tiktok"}
-              rows={5}
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-            />
-          </div>
-
-          <div className="field">
-            <label htmlFor="tagline" className="label">CTA URL & LAbel *</label>
-            <div style={{ display: "flex", gap: 8 }}>
-              <input
-                className="big-input"
-                placeholder="https://…"
-                value={ctaUrl}
-                onChange={(e) => setCtaUrl(e.target.value)}
-                style={{ flex: 2 }}
-              />
-              <input
-                className="big-input"
-                placeholder="Button-Text"
-                value={ctaLabel}
-                onChange={(e) => setCtaLabel(e.target.value)}
-                style={{ flex: 1 }}
-              />
-            </div>
-          </div>
-
-          <div className="field">
-            <label htmlFor="mk-bio" className="label">Bio * (300–400 Wörter)</label>
-            <div className="collapsible-box">
-              <CollapsibleText collapsedLines={1}>
-
+              <div>
                 <div>
-                  <div>
-                    Die Bio ist dafür da, dich kurz vorzustellen und einen persönlichen Eindruck zu hinterlassen.
-                  </div><br />
-                  <strong>Fragen, die du beantworten solltest</strong>
-                  <ul>
-                    <li>Wo lebst und arbeitest du?</li>
-                    <li>Wann hast du mit Musik angefangen / veröffentlicht / live gespielt? Auslöser?</li>
-                    <li>Welches Genre machst du – wie klingt dein Sound genau?</li>
-                    <li>Wer sind deine Einflüsse?</li>
-                    <li>Welche Releases gibt es (EPs, Alben, Remixe …)?</li>
-                    <li>Welche Auftritte/Shows sind erwähnenswert?</li>
-                    <li>Woran arbeitest du gerade (Tour, Studio, Kooperationen …)?</li>
-                    <li>Nebenprojekte (Radio, Eventorga, Kollektiv …)?</li>
-                  </ul>
+                  Die Bio ist dafür da, dich kurz vorzustellen und einen persönlichen Eindruck zu hinterlassen.
+                </div><br />
+                <strong>Fragen, die du beantworten solltest</strong>
+                <ul>
+                  <li>Wo lebst und arbeitest du?</li>
+                  <li>Wann hast du mit Musik angefangen / veröffentlicht / live gespielt? Auslöser?</li>
+                  <li>Welches Genre machst du – wie klingt dein Sound genau?</li>
+                  <li>Wer sind deine Einflüsse?</li>
+                  <li>Welche Releases gibt es (EPs, Alben, Remixe …)?</li>
+                  <li>Welche Auftritte/Shows sind erwähnenswert?</li>
+                  <li>Woran arbeitest du gerade (Tour, Studio, Kooperationen …)?</li>
+                  <li>Nebenprojekte (Radio, Eventorga, Kollektiv …)?</li>
+                </ul>
 
-                  <strong>Struktur deiner Bio</strong>
-                  <ol>
-                    <li><em>Einstieg &amp; Highlights:</em> Wer du bist, Herkunft, Genre/Sound + 1–2 Erfolge.</li>
-                    <li><em>Hintergrund &amp; Story:</em> Weg zur Musik, Stilprägung, was dich einzigartig macht.</li>
-                    <li><em>Aktuell &amp; Ausblick:</em> Woran arbeitest du? Was steht an?</li>
-                  </ol>
+                <strong>Struktur deiner Bio</strong>
+                <ol>
+                  <li><em>Einstieg &amp; Highlights:</em> Wer du bist, Herkunft, Genre/Sound + 1–2 Erfolge.</li>
+                  <li><em>Hintergrund &amp; Story:</em> Weg zur Musik, Stilprägung, was dich einzigartig macht.</li>
+                  <li><em>Aktuell &amp; Ausblick:</em> Woran arbeitest du? Was steht an?</li>
+                </ol>
 
-                  <strong>Checkliste vor Abgabe</strong>
-                  <ul>
-                    <li>Enthält: Wer bin ich, wie klinge ich, was habe ich gemacht, woran arbeite ich?</li>
-                    <li>Sätze aktiv formuliert.</li>
-                    <li>Kurz &amp; klar (gekürzt).</li>
-                    <li>Fremde verstehen in 10 Sek., was du machst.</li>
-                    <li>Rechtschreibung geprüft, Freunde gegenlesen lassen.</li>
-                  </ul>
-                </div>
-              </CollapsibleText>
-            </div>
-            <textarea
-              id="mk-bio"
-              name="bio"
-              className="big-textarea"
-              defaultValue="hahah"
-              required
-              rows={10}
-              value={bioBlock}
-              onChange={(e) => setBioBlock(e.target.value)}
-            />
-          </div>
-
-          <div className="field">
-            <label htmlFor="tagline" className="label">Repertoire *</label>
-            <textarea
-              className="big-textarea"
-              placeholder="Repertoire …"
-              rows={6}
-              value={repertoireBlock}
-              onChange={(e) => setRepertoireBlock(e.target.value)}
-            />
-          </div>
-
-          <div className="field">
-            <label htmlFor="tagline" className="label">Tech Rider *</label>
-            <textarea
-              className="big-textarea"
-              placeholder="Technische Anforderungen …"
-              rows={6}
-              value={riderBlock}
-              onChange={(e) => setRiderBlock(e.target.value)}
-            />
-          </div>
-
-          <div className="field">
-            <label className="label">Portrait-Foto *</label>
-            <div className="photo-drop">
-              <input type="file" accept="image/*" required onChange={portraitPhotoChange} />
-              <br />
-              <small className="muted">JPG oder PNG. Hochformat.</small>
-              {portraitPhotoUrl && (
-                <div style={{ marginTop: 8 }}>
-                  <img src={portraitPhotoUrl} alt="Vorschau Seite 2" className="preview" />
-                </div>
-              )}
-            </div>
-          </div>
-
-
-          <div className="field">
-            <label className="label">Hero Foto *</label>
-            <div className="photo-drop">
-              <input type="file" accept="image/*" onChange={onPhotoChange} />
-              <br />
-              <small className="muted">JPG oder PNG. Ziel-Format: 1:1.</small>
-
-              {photoUrl && (
-                <div style={{ marginTop: 12 }}>
-                  <img src={photoUrl} alt="Vorschau Foto" className="preview" />
-                  <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-                    <button type="button" className="btn" onClick={() => setCropOpen(true)}>Foto erneut zuschneiden</button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-
-          {/*Tempalte*/}
-          <div className="field">
-            <label className="label">Media-Kit Farben</label>
-
-            <div role="radiogroup" aria-label="Template-Farben" className="tpl-grid">
-              {COLOR_TEMPLATES.map((t) => {
-                const active = templateId === t.id;
-                return (
-                  <button
-                    key={t.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={active}
-                    onClick={() => setTemplateId(t.id)}
-                    className={`tpl-opt ${active ? "is-active" : ""}`}
-                    style={{
-                      "--c1": t.c1,
-                      "--c2": t.c2,
-                      "--c3": t.c3 ?? t.c1,
-                      "--on-c1": t.on1,
-                      "--on-c2": t.on2,
-                      "--on-c3": t.on3 ?? t.on1,
-                    }}
-                    title={t.name}
-                  >
-                    <span className="swatch" />
-                    <span className="swatch" />
-                    <span className="tpl-name">{t.name}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-
-          <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
-            <button type="submit" className="btn primary generate-btn" disabled={busy}>
-              {busy ? "Erzeuge…" : "Media Kit generieren"}
-            </button>
-          </div>
-        </form>
-
-        {/* Crop-Dialog */}
-        {cropOpen && rawPhotoUrl && (
-          <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Foto zuschneiden">
-            <div className="modal">
-              <div className="cropper-wrap">
-                <Cropper
-                  image={rawPhotoUrl}
-                  crop={crop}
-                  zoom={zoom}
-                  aspect={HERO_ASPECT}
-                  onCropChange={setCrop}
-                  onZoomChange={setZoom}
-                  onCropComplete={(_, croppedPixels) => setCroppedPixels(croppedPixels)}
-                  restrictPosition={true}
-                  showGrid={false}
-                />
+                <strong>Checkliste vor Abgabe</strong>
+                <ul>
+                  <li>Enthält: Wer bin ich, wie klinge ich, was habe ich gemacht, woran arbeite ich?</li>
+                  <li>Sätze aktiv formuliert.</li>
+                  <li>Kurz &amp; klar (gekürzt).</li>
+                  <li>Fremde verstehen in 10 Sek., was du machst.</li>
+                  <li>Rechtschreibung geprüft, Freunde gegenlesen lassen.</li>
+                </ul>
               </div>
-              <div className="modal-actions">
-                <input
-                  type="range"
-                  min={1}
-                  max={3}
-                  step={0.01}
-                  value={zoom}
-                  onChange={(e) => setZoom(Number(e.target.value))}
-                  aria-label="Zoom"
-                />
-                <div style={{ display: "flex", gap: 8 }}>
-                  <button type="button" className="btn" onClick={() => setCropOpen(false)}>Abbrechen</button>
-                  <button type="button" className="btn primary" onClick={confirmCrop}>Übernehmen</button>
+            </CollapsibleText>
+          </div>
+          <textarea
+            id="mk-bio"
+            name="bio"
+            className="big-textarea"
+            defaultValue="hahah"
+            required
+            rows={10}
+            value={bioBlock}
+            onChange={(e) => setBioBlock(e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">Repertoire *</label>
+          <textarea
+            className="big-textarea"
+            placeholder="Repertoire …"
+            rows={6}
+            value={repertoireBlock}
+            onChange={(e) => setRepertoireBlock(e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="tagline" className="label">Tech Rider *</label>
+          <textarea
+            className="big-textarea"
+            placeholder="Technische Anforderungen …"
+            rows={6}
+            value={riderBlock}
+            onChange={(e) => setRiderBlock(e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label className="label">Portrait-Foto *</label>
+          <div className="photo-drop">
+            <input type="file" accept="image/*" required onChange={portraitPhotoChange} />
+            <br />
+            <small className="muted">JPG oder PNG. Hochformat.</small>
+            {portraitPhotoUrl && (
+              <div style={{ marginTop: 8 }}>
+                <img src={portraitPhotoUrl} alt="Vorschau Seite 2" className="preview" />
+              </div>
+            )}
+          </div>
+        </div>
+
+
+        <div className="field">
+          <label className="label">Hero Foto *</label>
+          <div className="photo-drop">
+            <input type="file" accept="image/*" onChange={onPhotoChange} />
+            <br />
+            <small className="muted">JPG oder PNG. Ziel-Format: 1:1.</small>
+
+            {photoUrl && (
+              <div style={{ marginTop: 12 }}>
+                <img src={photoUrl} alt="Vorschau Foto" className="preview" />
+                <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                  <button type="button" className="btn" onClick={() => setCropOpen(true)}>Foto erneut zuschneiden</button>
                 </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+
+        {/*Tempalte*/}
+        <div className="field">
+          <label className="label">Media-Kit Farben</label>
+
+          <div role="radiogroup" aria-label="Template-Farben" className="tpl-grid">
+            {COLOR_TEMPLATES.map((t) => {
+              const active = templateId === t.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setTemplateId(t.id)}
+                  className={`tpl-opt ${active ? "is-active" : ""}`}
+                  style={{
+                    "--c1": t.c1,
+                    "--c2": t.c2,
+                    "--c3": t.c3 ?? t.c1,
+                    "--on-c1": t.on1,
+                    "--on-c2": t.on2,
+                    "--on-c3": t.on3 ?? t.on1,
+                  }}
+                  title={t.name}
+                >
+                  <span className="swatch" />
+                  <span className="swatch" />
+                  <span className="tpl-name">{t.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+
+        <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+          <button type="submit" className="btn primary generate-btn" disabled={busy}>
+            {busy ? "Erzeuge…" : "Media Kit generieren"}
+          </button>
+        </div>
+      </form>
+
+      {/* Crop-Dialog */}
+      {cropOpen && rawPhotoUrl && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Foto zuschneiden">
+          <div className="modal">
+            <div className="cropper-wrap">
+              <Cropper
+                image={rawPhotoUrl}
+                crop={crop}
+                zoom={zoom}
+                aspect={HERO_ASPECT}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={(_, croppedPixels) => setCroppedPixels(croppedPixels)}
+                restrictPosition={true}
+                showGrid={false}
+              />
+            </div>
+            <div className="modal-actions">
+              <input
+                type="range"
+                min={1}
+                max={3}
+                step={0.01}
+                value={zoom}
+                onChange={(e) => setZoom(Number(e.target.value))}
+                aria-label="Zoom"
+              />
+              <div style={{ display: "flex", gap: 8 }}>
+                <button type="button" className="btn" onClick={() => setCropOpen(false)}>Abbrechen</button>
+                <button type="button" className="btn primary" onClick={confirmCrop}>Übernehmen</button>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {portraitCropOpen && rawPortraitPhotoUrl && (
-          <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Portrait zuschneiden">
-            <div className="modal">
-              <div className="cropper-wrap">
-                <Cropper
-                  image={rawPortraitPhotoUrl}
-                  crop={portraitCrop}
-                  zoom={portraitZoom}
-                  aspect={PORTRAIT_ASPECT}
-                  onCropChange={setPortraitCrop}
-                  onZoomChange={setPortraitZoom}
-                  onCropComplete={(_, cp) => setPortraitCroppedPixels(cp)}
-                  restrictPosition={true}
-                  showGrid={false}
-                />
-              </div>
-              <div className="modal-actions">
-                <input
-                  type="range"
-                  min={1}
-                  max={3}
-                  step={0.01}
-                  value={portraitZoom}
-                  onChange={(e) => setPortraitZoom(Number(e.target.value))}
-                  aria-label="Zoom"
-                />
-                <div style={{ display: "flex", gap: 8 }}>
-                  <button type="button" className="btn" onClick={() => setPortraitCropOpen(false)}>Abbrechen</button>
-                  <button type="button" className="btn primary" onClick={confirmPortraitCrop}>Übernehmen</button>
-                </div>
+      {portraitCropOpen && rawPortraitPhotoUrl && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Portrait zuschneiden">
+          <div className="modal">
+            <div className="cropper-wrap">
+              <Cropper
+                image={rawPortraitPhotoUrl}
+                crop={portraitCrop}
+                zoom={portraitZoom}
+                aspect={PORTRAIT_ASPECT}
+                onCropChange={setPortraitCrop}
+                onZoomChange={setPortraitZoom}
+                onCropComplete={(_, cp) => setPortraitCroppedPixels(cp)}
+                restrictPosition={true}
+                showGrid={false}
+              />
+            </div>
+            <div className="modal-actions">
+              <input
+                type="range"
+                min={1}
+                max={3}
+                step={0.01}
+                value={portraitZoom}
+                onChange={(e) => setPortraitZoom(Number(e.target.value))}
+                aria-label="Zoom"
+              />
+              <div style={{ display: "flex", gap: 8 }}>
+                <button type="button" className="btn" onClick={() => setPortraitCropOpen(false)}>Abbrechen</button>
+                <button type="button" className="btn primary" onClick={confirmPortraitCrop}>Übernehmen</button>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-      </main>
-    );
-  };
+    </main>
+  );
 }
