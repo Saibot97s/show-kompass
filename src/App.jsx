@@ -1,15 +1,14 @@
-import { Routes, Route } from 'react-router-dom'
-import Header from './components/Header'
-import Footer from './components/Footer'
-import Home from './pages/Home'
-import Course from './pages/Course'
-import Privacy from "./pages/Privacy";
-import MediaKit from "./pages/MediaKit";
-import MediaKitGenerator from "./pages/MediaKitGenerator";
-import Error404 from "./pages/404";
+import { Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import Course from './pages/Course';
+import Privacy from './pages/Privacy';
+import MediaKit from './pages/MediaKit';
+import MediaKitGenerator from './pages/MediaKitGenerator';
+import NotFound from './pages/NotFound';
 
-
-export default function App(){
+export default function App() {
   return (
     <>
       <Header />
@@ -19,10 +18,9 @@ export default function App(){
         <Route path="/mediakit/3Fy9" element={<MediaKitGenerator />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/kurs/:slug" element={<Course />} />
-         <Route path="*" element={<Error404 />} />
-
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </>
-  )
+  );
 }

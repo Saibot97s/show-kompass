@@ -1,12 +1,3 @@
 <!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Umleitung…</title>
-<script>
-  (function () {
-    var repo = "/REPO_NAME";
-    var full = location.pathname + location.search + location.hash;
-    var rel  = full.startsWith(repo) ? full.slice(repo.length) : full;
-    sessionStorage.setItem("gh-spa-redirect", rel);
-    location.replace(repo + "/");
-  })();
-</script>
 </html>

@@ -154,7 +154,7 @@ export default function Home() {
               >
                 “
               </span>
-              <p style={{ margin: 0, fontWeight: 700, fontSize: 'clamp(1.2rem, 2.vw, 1.5rem)' }}>
+              <p style={{ margin: 0, fontWeight: 700, fontSize: 'clamp(1.2rem, 2vw, 1.5rem)' }}>
                 Ich weiß aus eigener Erfahrung: Talent
                 allein reicht nicht. Wer sich auf der Bühne verkaufen möchte, muss auch das Business
                 dahinter verstehen.

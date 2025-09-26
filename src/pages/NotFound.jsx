@@ -1,9 +1,8 @@
-// src/pages/Privacy.jsx
 import { Link } from "react-router-dom";
 import SignupForm from "../components/SignupForm";
 import LogoLeiste from "../components/LogoLeiste";
 
-export default function Privacy() {
+export default function NotFound() {
   return (
     <main>
 
