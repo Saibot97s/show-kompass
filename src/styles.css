@@ -349,7 +349,7 @@ header {
 
 /* Grid Kurse */
 .section {
-  padding: 24px 0 80px;
+  padding: 24px 0 40px;
 }
 
 .section h2 {
@@ -977,26 +977,37 @@ dialog {
   margin: 20px 0;
 }
 
-/* Logo Strip */
 .logos-strip {
+  --gap: 40px;
+  --cell-min: 50px;
+  --row-h: clamp(40px, 10vw, 100px);
+
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
-  gap: 50px;
+  grid-template-columns: repeat(auto-fit, minmax(var(--cell-min), 1fr));
+  gap: var(--gap);
   align-items: center;
+  grid-auto-rows: var(--row-h);
 }
 
-.logo {
-  height: 20px;
-  width: auto;
-  max-width: 70px;
+.logos-strip .logo {
+  /* Bild als Grid-Item zentrieren */
   justify-self: center;
+  align-self: center;
+  padding-bottom: 20px;
+
+  /* groß, aber nie verzerrt */
+  max-width: 100%;
+  max-height: 35%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
   display: block;
 }
 
 @media (max-width: 640px) {
   .logos-strip {
     grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-    gap: 2px;
+    gap: 20px;
   }
 
   .logo {
@@ -1006,10 +1017,9 @@ dialog {
 
 /* Vollbild-Dialog */
 #previewModal[open] {
-  width: 90vw;
-  height: 90vh;
+  width: 96vw;
+  max-height: 90vh;
   max-width: none;
-  max-height: none;
   margin: 0;
   padding: 0;
   border: 0;
@@ -1019,7 +1029,7 @@ dialog {
   grid-template-rows: auto 1fr;
   background: #000;
   top: 5vh;
-  left: 5vw;
+  left: 2vw;
 }
 
 #previewModal::backdrop {
@@ -1665,14 +1675,14 @@ h2 {
 .responsivegridL {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 20px;
+  gap: 60px;
   align-items: center;
 }
 
 .responsivegridR {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 20px;
+  gap: 60px;
   align-items: center;
 }
 

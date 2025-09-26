@@ -1,745 +1,458 @@
-import { useState, useRef, useMemo, useId } from "react";
-import html2pdf from "html2pdf.js";
-import Cropper from "react-easy-crop";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import PreviewModal from '../components/PreviewModal'
+import LogoLeiste from '../components/LogoLeiste'
+import SignupForm from "../components/SignupForm";
 
-const TEMPLATE_URL = "/templates/mediakit.html";
-const HERO_ASPECT = 1 / 1;
-const PORTRAIT_ASPECT = 3 / 4;
-
-console.log("MediaKit Component wurde geladen!");
-
-function isIOS() {
-  const ua = navigator.userAgent || "";
-  const iOSDevice = /iPad|iPhone|iPod/.test(ua);
-  const iPadOS = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
-  return iOSDevice || iPadOS;
-}
-
-const COLOR_TEMPLATES = [
-  {
-    id: "ocean", name: "Ocean",
-    c1: "#0ea5e9", c2: "#111827", c3: "#e6f6fe",
-    on1: "#ffffff", on2: "#ffffff", on3: "#0b1220"
-  },
-  {
-    id: "forest", name: "Forest",
-    c1: "#10b981", c2: "#064e3b", c3: "rgba(194, 255, 196, 1)",
-    on1: "#0b1f16", on2: "#eafff6", on3: "#083f2f"
-  },
-  {
-    id: "violet", name: "Violet",
-    c1: "#8b5cf6", c2: "#1f2937", c3: "#efe9ff",
-    on1: "#ffffff", on2: "#e5e7eb", on3: "#261b4a"
-  },
-  {
-    id: "slate", name: "Slate",
-    c1: "#111827", c2: "#6b7280", c3: "#f3f4f6",
-    on1: "#ffffff", on2: "#ffffff", on3: "#111827"
-  },
-  {
-    id: "ember", name: "Ember",
-    c1: "#f97316", c2: "#1f2937", c3: "#fff3e6",
-    on1: "#111111", on2: "#ffffff", on3: "#111111"
-  },
-  {
-    id: "gold", name: "Gold",
-    c1: "#d97706", c2: "#0f172a", c3: "#fff7e6",
-    on1: "#111111", on2: "#ffffff", on3: "#111111"
-  },
-  {
-    id: "mono", name: "Mono",
-    c1: "#111827", c2: "#374151", c3: "#f3f4f6",
-    on1: "#ffffff", on2: "#ffffff", on3: "#111827"
-  },
-  {
-    id: "teal", name: "Teal",
-    c1: "#14b8a6", c2: "#0f172a", c3: "#e7f7f5",
-    on1: "#07231f", on2: "#e5e7eb", on3: "#0b1220"
-  },
-  {
-    id: "blush", name: "Blush",
-    c1: "#f43f5e", c2: "#1f2937", c3: "#ffe4ea",
-    on1: "#ffffff", on2: "#e5e7eb", on3: "#6b0f1a"
-  },
-  {
-    id: "indigo", name: "Indigo",
-    c1: "#4f46e5", c2: "#111827", c3: "#eef2ff",
-    on1: "#ffffff", on2: "#ffffff", on3: "#111827"
-  },
-  {
-    id: "copper", name: "Copper",
-    c1: "#b45309", c2: "#1f2937", c3: "#fff4e6",
-    on1: "#ffffff", on2: "#e5e7eb", on3: "#111827"
-  },
-  {
-    id: "aqua", name: "Aqua",
-    c1: "#06b6d4", c2: "#0b132b", c3: "#e0faff",
-    on1: "#082f49", on2: "#e5e7eb", on3: "#06202a"
-  },
-  {
-    id: "berry", name: "Berry",
-    c1: "#a21caf", c2: "#3b0a2a", c3: "#fde7ff",
-    on1: "#ffffff", on2: "#ffffff", on3: "#3b0a2a"
-  },
-];
-
-
-function slugify(s) {
-  return (s || "media-kit")
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[^a-z0-9]+/gi, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
-function escapeHtml(str) {
-  return (str ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-function CollapsibleText({ children, collapsedLines = 6 }) {
-  const [open, setOpen] = useState(false);
+export default function Home() {
+  const [showPreview, setShowPreview] = useState(false)
 
   return (
-    <div className="collapsible">
-      <div
-        className={`collapsible-content ${open ? "" : "is-clamped"}`}
-        style={{ "--lines": collapsedLines }}
-      >
-        {children}
-      </div>
+    <main>
 
-      <button
-        type="button"
-        className="link-btn"
-        onClick={() => setOpen(v => !v)}
-        aria-expanded={open}
-      >
-        {open ? "weniger anzeigen" : "mehr anzeigen"}
-      </button>
-    </div>
-  );
-}
+      {/* HERO v2 — Split Layout (minimal) */}
+      <section className="hero hero--split" aria-label="Mediakit Generator – Hero">
+        <div className="container hero-grid">
+          {/* Copy left */}
+          <div className="hero-copy">
+            <h1 className="hero-title">
+              <span className="gradient-title">Erstelle DEIN Media Kit</span>
+              <span className="title-shadow">Erstelle DEIN Media Kit</span>
+            </h1>
+            <h1>und hole dir die Gigs.</h1>
 
-// Hilfefunktion: Bild laden
-function createImage(url) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = (e) => reject(e);
-    img.src = url;
-  });
-}
-
-// Zuschneiden (Canvas aus cropPixels erstellen)
-async function getCroppedImg(imageSrc, cropPixels, type = "image/jpeg") {
-  const image = await createImage(imageSrc);
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-
-  canvas.width = Math.round(cropPixels.width);
-  canvas.height = Math.round(cropPixels.height);
-
-  ctx.drawImage(
-    image,
-    cropPixels.x,
-    cropPixels.y,
-    cropPixels.width,
-    cropPixels.height,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-  return canvas.toDataURL(type, 0.98);
-}
+            <p className="hero-lead">
+              Erstelle mit unserem kostenlosen Generator in wenigen Klicks ein professionelles Media Kit, das Booker:innen lieben.
+              Mit Vorlage, Auto-Layout und 1-Klick-Export als PDF.
+            </p>
 
 
-async function waitForImages(root) {
-  const imgs = Array.from(root.querySelectorAll('img'));
-  await Promise.all(imgs.map(img => {
-    if (img.complete) return Promise.resolve();
-    return new Promise(res => {
-      const done = () => res();
-      img.onload = done; img.onerror = done;
-      if (img.decode) { img.decode().then(done).catch(done); }
-    });
-  }));
-}
+            <br />    <br />
 
 
-export default function MediaKit() {
-  const [name, setName] = useState("");
-  const [bio, setBio] = useState("[Name] ist ein/e [Genre]-Musiker/in aus [Ort], der/die seit [Jahr] Musik veröffentlicht. Erste Erfolge waren [Highlight 1] und [Highlight 2]. Sein/ihr Sound bewegt sich zwischen [Genre/Einflüsse] und [besondere Merkmale]. [Name] begann mit [Instrument] im Alter von [X Jahren]. Inspiriert von [Einflüsse] entwickelte er/sie einen Stil, der [Beschreibung des Sounds]. Zurzeit arbeitet [Name] an [Projekt/Release/Tour]. Zusätzlich ist er/sie in [Nebenprojekte] involviert. In den kommenden Monaten stehen [Events/Shows] an.");
-  const [photoUrl, setPhotoUrl] = useState(""); // final (DataURL, ggf. zugeschnitten)
-  const [rawPhotoUrl, setRawPhotoUrl] = useState(""); // original DataURL vorm Zuschnitt
-  const [tagline, setTagline] = useState("");
-  const [contact, setContact] = useState("DEIN NAME\ndeine@email.com\n+00 000 000\nInsta @instagram\nTiktok @tikto");
-  const [heroText, setHeroText] = useState("[Name] verbindet druckvolle [Genre/Mix: z. B. Melodic & Tech House] mit organischen Samples und detailverliebten Arrangements. Ideal für [Event-Typ] und andere Events.\n \n Bekannt aus: Bekannt aus: [Sender 1] · [Zeitung 1]");
-  const [ctaUrl, setCtaUrl] = useState("");
-  const [ctaLabel, setCtaLabel] = useState("Jetzt ansehen");
+            <br />
 
-  //Templates
-  const [templateId, setTemplateId] = useState(COLOR_TEMPLATES[0].id);
-  const activeTpl = COLOR_TEMPLATES.find(t => t.id === templateId) || COLOR_TEMPLATES[0];
+            {/* CTA */}
+            <SignupForm className="cta-form" />
 
-  // Seite 2
-  const [bioBlock, setBioBlock] = useState("[Name] ist ein/e [Genre]-Musiker/in aus [Ort], der/die seit [Jahr] Musik veröffentlicht. Erste Erfolge waren [Highlight 1] und [Highlight 2]. Sein/ihr Sound bewegt sich zwischen [Genre/Einflüsse] und [besondere Merkmale]. [Name] begann mit [Instrument] im Alter von [X Jahren]. Inspiriert von [Einflüsse] entwickelte er/sie einen Stil, der [Beschreibung des Sounds]. Zurzeit arbeitet [Name] an [Projekt/Release/Tour]. Zusätzlich ist er/sie in [Nebenprojekte] involviert. In den kommenden Monaten stehen [Events/Shows] an.");
-  const [repertoireBlock, setRepertoireBlock] = useState("");
-  const [riderBlock, setRiderBlock] = useState("");
+            <br />
+            <div className="proof" aria-live="polite">
+              <div className="faces" aria-hidden="true">
+                <span className="face f1" />
+                <span className="face f2" />
+                <span className="face f3" />
+                <span className="face f4" />
+              </div>
+              <span><strong>30 Artists</strong> haben zuletzt den Generator genutzt</span>
+            </div>
+          </div>
 
-  // Bild für Seite 2
-  const [portraitPhotoUrl, setPortraitPhotoUrl] = useState("");
+          {/* Media right */}
+          <div className="hero-media">
+            <div className="device img-overlay" role="img" aria-label="Vorschau deines Media Kits">
+              <img className="device-img" src={import.meta.env.BASE_URL + 'img2.jpeg'} alt="Mediakit Vorschau" loading="eager" />
+              <button
+                className="play-btn play-btn--center"
+                aria-label="Vorschauvideo abspielen"
+                onClick={() => setShowPreview(true)}
+              >
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M8 5v14l11-7L8 5z" fill="white" />
+                </svg>
+              </button>
+            </div>
 
-
-  // --- Hero-Crop-UI (für das große Foto auf Seite 1) ---
-  const [cropOpen, setCropOpen] = useState(false);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [croppedPixels, setCroppedPixels] = useState(null);
-
-  // Portrait-Crop-UI ---
-  const [portraitCropOpen, setPortraitCropOpen] = useState(false);
-  const [rawPortraitPhotoUrl, setRawPortraitPhotoUrl] = useState("");
-  const [portraitCrop, setPortraitCrop] = useState({ x: 0, y: 0 });
-  const [portraitZoom, setPortraitZoom] = useState(1);
-  const [portraitCroppedPixels, setPortraitCroppedPixels] = useState(null);
-
-  const [busy, setBusy] = useState(false);
-  const hiddenHostRef = useRef(null);
-
-  function normalizeUrl(u) {
-    if (!u) return "";
-    const hasProto = /^https?:\/\//i.test(u);
-    return hasProto ? u : `https://${u}`;
-  }
-
-  async function onGenerate(e) {
-    e?.preventDefault?.();
-
-    if (!name.trim() || !bio.trim() || !photoUrl) {
-      alert("Bitte Name, Bio und ein (zugeschnittenes) Foto angeben.");
-      return;
-    }
-
-    if (!portraitPhotoUrl) {
-      alert("Bitte auch das Portrait für Seite 2 hochladen.");
-      return;
-    }
-
-    setBusy(true);
-    try {
-      // 1) Template laden
-      const res = await fetch(TEMPLATE_URL);
-      if (!res.ok) throw new Error(`Template nicht gefunden: ${TEMPLATE_URL}`);
-      let html = await res.text();
-
-      // 2) Platzhalter
-      const autoTagline = (bio || "").split(/\n/).find(l => l.trim()) || "";
-      const finalTagline = (tagline && tagline.trim())
-        ? tagline.trim()
-        : autoTagline.slice(0, 120);
-      html = html
-        // Seite 1
-        .replaceAll("{{name}}", escapeHtml(name))
-        .replaceAll("{{tagline}}", escapeHtml(finalTagline))
-        .replaceAll("{{contact}}", escapeHtml(contact))
-        .replaceAll("{{herotext}}", escapeHtml(heroText))
-        .replaceAll("{{ctaUrl}}", escapeHtml(ctaUrl))
-        .replaceAll("{{ctaLabel}}", escapeHtml(ctaLabel))
-        // Seite 2
-        .replaceAll("{{bioBlock}}", escapeHtml(bioBlock))
-        .replaceAll("{{repertoireBlock}}", escapeHtml(repertoireBlock))
-        .replaceAll("{{riderBlock}}", escapeHtml(riderBlock))
-        .replaceAll("{{page2ImageUrl}}", portraitPhotoUrl)   // <— WICHTIG
-        // Hero-Bild Seite 1
-        .replaceAll("{{photoDataUrl}}", photoUrl);
-
-      // 3) OFFSCREEN Host (sichtbar renderbar!)
-      let host = hiddenHostRef.current;
-      if (!host) {
-        host = document.createElement("div");
-        host.setAttribute("aria-hidden", "true");
-        host.style.position = "absolute";
-        host.style.left = "-10000px"; // außerhalb Viewport
-        host.style.top = "0";
-        host.style.width = "794px"; // A4 @ 96dpi
-        host.style.height = "auto"; // mehrere Seiten
-        host.style.pointerEvents = "none";
-        document.body.appendChild(host);
-        hiddenHostRef.current = host;
-      }
-
-      host.innerHTML = html;
-
-      // nach host.innerHTML = html;
-      const { c1, c2, c3, on1, on2, on3 } = activeTpl;
-      host.style.setProperty("--c1", c1);
-      host.style.setProperty("--c2", c2);
-      host.style.setProperty("--c3", c3 ?? c1);
-      host.style.setProperty("--on-c1", on1);
-      host.style.setProperty("--on-c2", on2);
-      host.style.setProperty("--on-c3", on3 ?? on1);
-
-
-      host.prepend();
-
-
-      // 4) Seiten sammeln
-      const pages = Array.from(host.querySelectorAll(".page"));
-      if (!pages.length) throw new Error("Keine .page im Template gefunden");
-
-      // Auf Bilder warten (je Seite)
-      for (const p of pages) await waitForImages(p);
-
-      // **WICHTIG**: neuen Tab sofort öffnen, solange noch im User-Gesture
-      const previewTab = window.open("", "_blank", "noopener,noreferrer");
-      if (previewTab) {
-        // Optional: kurzer Platzhalter (verhindert "leere Seite")
-        previewTab.document.title = "PDF wird vorbereitet …";
-        previewTab.document.body.innerHTML =
-          '<p style="font: 14px system-ui; padding:16px">PDF wird vorbereitet …</p>';
-      }
-
-      // 5) PDF erstellen (A4 mm)
-      const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
-
-      for (let i = 0; i < pages.length; i++) {
-        const pageEl = pages[i];
-
-        const canvas = await html2canvas(pageEl, {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: "#ffffff",
-          scrollX: 0,
-          scrollY: 0,
-        });
-        const imgData = canvas.toDataURL("image/jpeg", 0.98);
-
-        const pageW = pdf.internal.pageSize.getWidth();
-        const pageH = pdf.internal.pageSize.getHeight();
-
-        if (i > 0) pdf.addPage();
-        pdf.addImage(imgData, "JPEG", 0, 0, pageW, pageH, undefined, "FAST");
-
-        // === CTA-Link-Annotation (Seite 1) ===
-        if (i === 0) {
-          const ctaEl = pageEl.querySelector(".cta");
-          const url = normalizeUrl(ctaUrl);
-          if (ctaEl && url) {
-            const pr = pageEl.getBoundingClientRect();
-            const br = ctaEl.getBoundingClientRect();
-            const x = ((br.left - pr.left) / pr.width) * pageW;
-            const y = ((br.top - pr.top) / pr.height) * pageH;
-            const w = (br.width / pr.width) * pageW;
-            const h = (br.height / pr.height) * pageH;
-            pdf.link(x, y, w, h, { url });
-          }
-        }
-      }
-
-      // >>> statt pdf.save(...):
-      const filename = `${slugify(name)}.pdf`;
-      const blob = pdf.output("blob");
-      const url = URL.createObjectURL(blob);
-
-      // 1) Immer neuen Tab/Viewer öffnen (Wunsch)
-      if (previewTab) {
-        // bereits geöffnet – jetzt auf die PDF umleiten
-        previewTab.location.href = url;
-      } else {
-        // falls Blocker o. Ä.
-        window.open(url, "_blank", "noopener,noreferrer");
-      }
-
-      // 2) Zusätzlich: echter Download auf Nicht-iOS
-      if (!isIOS()) {
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      }
-
-      // URL nicht sofort widerrufen – der Tab braucht sie
-      setTimeout(() => URL.revokeObjectURL(url), 120000);
-
-
-      // ↓↓↓ try/catch/finally sauber schließen und dann onGenerate beenden
-    } catch (err) {
-      console.error(err);
-      alert("Beim Erzeugen des PDFs ist etwas schiefgelaufen.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  function onPhotoChange(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result;
-      setRawPhotoUrl(dataUrl);
-      setCrop({ x: 0, y: 0 });
-      setZoom(1);
-      setCroppedPixels(null);
-      setCropOpen(true); // direkt Crop-Dialog öffnen
-    };
-    reader.readAsDataURL(file);
-  }
-
-
-  function portraitPhotoChange(e) {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    const r = new FileReader();
-    r.onload = () => {
-      const dataUrl = String(r.result || "");
-      setRawPortraitPhotoUrl(dataUrl);
-      setPortraitCrop({ x: 0, y: 0 });
-      setPortraitZoom(1);
-      setPortraitCroppedPixels(null);
-      setPortraitCropOpen(true);
-    };
-    r.readAsDataURL(f);
-  }
-
-  async function confirmCrop() {
-    if (!rawPhotoUrl) return;
-    let pixels = croppedPixels;
-    if (!pixels) {
-      // Wenn der User nicht interagiert hat: gesamten Bildbereich verwenden
-      const img = await createImage(rawPhotoUrl);
-      pixels = { x: 0, y: 0, width: img.width, height: img.height };
-    }
-    const cropped = await getCroppedImg(rawPhotoUrl, pixels, "image/jpeg");
-    setPhotoUrl(cropped);
-    setCropOpen(false);
-  }
-
-  async function confirmPortraitCrop() {
-    if (!rawPortraitPhotoUrl) return;
-    let pixels = portraitCroppedPixels;
-
-    if (!pixels) {
-      const img = await createImage(rawPortraitPhotoUrl);
-      pixels = { x: 0, y: 0, width: img.width, height: img.height };
-    }
-
-    const cropped = await getCroppedImg(rawPortraitPhotoUrl, pixels, "image/jpeg");
-    setPortraitPhotoUrl(cropped);
-    setPortraitCropOpen(false);
-  }
-
-  return (
-    <main className="container section">
-      <h1 style={{ margin: 0 }}>Media-Kit Generator</h1>
-      <p className="" style={{ margin: "6px 0 0" }}>
-      </p>
-
-      <form className="form-card" onSubmit={onGenerate}>
-
-
-
-        <div className="field">
-          <label htmlFor="mk-name" className="label">Name *</label>
-          <input
-            id="mk-name"
-            name="name"
-            className="big-input"
-            placeholder="Künstler*in / Bandname"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+            {/* Mini-benefits */}
+            <div className="mini-benefits">
+              <div className="mini">
+                <strong>0€</strong>
+                <span>Kostenlos starten</span>
+              </div>
+              <div className="mini">
+                <strong>1-Klick</strong>
+                <span>PDF Export</span>
+              </div>
+            </div>
+          </div>
         </div>
 
+        {/* Scroll Cue */}
+        <button className="scroll-cue" aria-label="Weiter scrollen">
+          <span className="chev" aria-hidden="true">▾</span>
+        </button>
+      </section>
 
-        <div className="field">
-          <label htmlFor="tagline" className="label">Tagline *</label>
-          Beschreibe kurz in wenigen Worten was dich besonders macht.
 
-          <input
-            className="big-input"
-            placeholder="Jazz Cover-Songs für jedes Event"
-            value={tagline}
-            onChange={(e) => setTagline(e.target.value)}
-            required
-          />
+
+
+
+      <br /><br /><br /><br /><br />
+
+
+      {/* WAS IST EIN MEDIAKIT */}
+      <section className="container section" aria-labelledby="mediakit-title">
+        <div className="responsivegridL">
+          <div className='hide-on-mobile'>
+            <img src={import.meta.env.BASE_URL + 'mediakit-sample.png'} alt="Beispiel eines Mediakit" style={{ width: '100%', borderRadius: '12px' }} />
+          </div>
+          <div>
+            <h2 id="mediakit-title">Was ist ein Mediakit?</h2>
+
+            <p>
+              Ein <strong>Mediakit</strong> ist deine digitale Visitenkarte als Musiker:in. Es fasst alle wichtigen Infos über dich, deine Musik und deine Auftritte in einem professionellen Dokument zusammen – klar, ansprechend und überzeugend.
+            </p>
+            <ul>
+              <li> Vorstellung deiner Person und deiner Musik</li>
+              <li> Hochwertige Fotos & Videos</li>
+              <li> Referenzen & bisherige Auftritte</li>
+              <li> Kontaktdaten & Buchungsinfos</li>
+            </ul>
+            <p>
+              Mit einem Mediakit überzeugst du Veranstalter:innen, Hotels oder Firmen auf den ersten Blick – und erhöhst so deine Chancen auf neue Auftritte und Kooperationen.
+            </p>
+          </div>
         </div>
-
-        <div className="field">
-          <label htmlFor="tagline" className="label">Kurzbeschriebung Titelblatt</label>
-          <textarea
-            className="big-textarea"
-            placeholder={"[Name] verbindet druckvolle [Genre/Mix: z. B. Melodic & Tech House] mit organischen Samples und detailverliebten Arrangements. Ideal für [Event-Typ] und andere Events.\n \n Bekannt aus: Bekannt aus: [Sender 1] · [Zeitung 1]"}
-            rows={6}
-            value={heroText}
-            onChange={(e) => setHeroText(e.target.value)}
-          />
-        </div>
+      </section>
 
 
-        <div className="field">
-          <label htmlFor="tagline" className="label">Kontakt *</label>
-          <textarea
-            className="big-textarea"
-            placeholder={"DEIN NAME\ndeine@email.com\n+00 000 000\nInsta @instagram\nTiktok @tiktok"}
-            rows={5}
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-          />
-        </div>
 
-        <div className="field">
-          <label htmlFor="tagline" className="label">CTA URL & LAbel *</label>
-          <div style={{ display: "flex", gap: 8 }}>
-            <input
-              className="big-input"
-              placeholder="https://…"
-              value={ctaUrl}
-              onChange={(e) => setCtaUrl(e.target.value)}
-              style={{ flex: 2 }}
-            />
-            <input
-              className="big-input"
-              placeholder="Button-Text"
-              value={ctaLabel}
-              onChange={(e) => setCtaLabel(e.target.value)}
-              style={{ flex: 1 }}
+
+
+      {/* SIRUS – PORTRAIT*/}
+      <section className="container section" aria-labelledby="sirus-title">
+
+        <div
+          className="responsivegridR"
+        >
+          <div>
+
+            {/* Großes Zitat */}
+            <blockquote
+              style={{
+                position: 'relative',
+                margin: '0 0 28px 0',
+                padding: '28px 24px 24px 72px',
+                lineHeight: 1.3,
+                background: 'linear-gradient(135deg, #4f46e5 0%, #ec4899 100%)',
+                color: '#fff',
+                borderRadius: '16px',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                overflow: 'hidden',
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  left: '20px',
+                  top: '6px',
+                  fontSize: 'clamp(3rem, 8vw, 6rem)',
+                  lineHeight: 1,
+                  opacity: 0.25,
+                  fontWeight: 900,
+                }}
+              >
+                “
+              </span>
+              <p style={{ margin: 0, fontWeight: 700, fontSize: 'clamp(1.2rem, 2.vw, 1.5rem)' }}>
+                Ich weiß aus eigener Erfahrung: Talent
+                allein reicht nicht. Wer sich auf der Bühne verkaufen möchte, muss auch das Business
+                dahinter verstehen.
+              </p>
+              <p>
+                Sirus Madjderey
+              </p>
+            </blockquote>
+
+            <p>
+              Ich bin Musiker, Autor und Businessmensch. Vor einigen Jahren habe ich ein ungewöhnliches Handwerk für mich entdeckt: das Pfeifen.
+              Ja, richtig gehört – ich pfeife auf der Bühne. Und klar, du fragst dich: Wer engagiert einen Kunstpfeifer? Genau diese Frage habe ich mir am Anfang auch gestellt. Heute halte ich den Weltrekord und war in unzähligen TV- , Radio- und Printmedien vertreten. Nicht, weil ich der beste Musiker bin – weit gefehlt. Sondern weil ich meine
+              unternehmerische Erfahrung in meine Kunst einfließen ließ, dem Markt zugehört und das passende Produkt geschnürt habe. So konnte ich daraus ein Business bauen. – und genau das kannst du auch.
+            </p>
+            <h4>Du kennst mich vielleicht aus:</h4>
+
+          </div>
+
+          <div>
+            <img
+              src={import.meta.env.BASE_URL + 'sirus-portrait.jpeg'}
+              alt="Sirus – Kunstpfeiffer, Business-Mensch und Bestseller-Autor"
+              style={{ width: '100%', borderRadius: '12px', boxShadow: '0 6px 20px rgba(0,0,0,0.1)' }}
             />
           </div>
         </div>
 
-        <div className="field">
-          <label htmlFor="mk-bio" className="label">Bio * (300–400 Wörter)</label>
-          <div className="collapsible-box">
-            <CollapsibleText collapsedLines={1}>
 
-              <div>
-                <div>
-                  Die Bio ist dafür da, dich kurz vorzustellen und einen persönlichen Eindruck zu hinterlassen.
-                </div><br />
-                <strong>Fragen, die du beantworten solltest</strong>
-                <ul>
-                  <li>Wo lebst und arbeitest du?</li>
-                  <li>Wann hast du mit Musik angefangen / veröffentlicht / live gespielt? Auslöser?</li>
-                  <li>Welches Genre machst du – wie klingt dein Sound genau?</li>
-                  <li>Wer sind deine Einflüsse?</li>
-                  <li>Welche Releases gibt es (EPs, Alben, Remixe …)?</li>
-                  <li>Welche Auftritte/Shows sind erwähnenswert?</li>
-                  <li>Woran arbeitest du gerade (Tour, Studio, Kooperationen …)?</li>
-                  <li>Nebenprojekte (Radio, Eventorga, Kollektiv …)?</li>
-                </ul>
+        {/* LOGO-REIHE – sehr schmales Foto */}
+        <LogoLeiste></LogoLeiste>
+      </section>
 
-                <strong>Struktur deiner Bio</strong>
-                <ol>
-                  <li><em>Einstieg &amp; Highlights:</em> Wer du bist, Herkunft, Genre/Sound + 1–2 Erfolge.</li>
-                  <li><em>Hintergrund &amp; Story:</em> Weg zur Musik, Stilprägung, was dich einzigartig macht.</li>
-                  <li><em>Aktuell &amp; Ausblick:</em> Woran arbeitest du? Was steht an?</li>
-                </ol>
+      <section className="section hide-on-mobile" aria-label="Problem-Lösung-Vergleich">
+        <div className="container">
+          <section className="flow-box" role="group">
 
-                <strong>Checkliste vor Abgabe</strong>
-                <ul>
-                  <li>Enthält: Wer bin ich, wie klinge ich, was habe ich gemacht, woran arbeite ich?</li>
-                  <li>Sätze aktiv formuliert.</li>
-                  <li>Kurz &amp; klar (gekürzt).</li>
-                  <li>Fremde verstehen in 10 Sek., was du machst.</li>
-                  <li>Rechtschreibung geprüft, Freunde gegenlesen lassen.</li>
-                </ul>
-              </div>
-            </CollapsibleText>
-          </div>
-          <textarea
-            id="mk-bio"
-            name="bio"
-            className="big-textarea"
-            defaultValue="hahah"
-            required
-            rows={10}
-            value={bioBlock}
-            onChange={(e) => setBioBlock(e.target.value)}
-          />
-        </div>
+            <div className="flow-cols" aria-label="Spaltenüberschriften">
+              <div className="colhead left"><span className="pill big">❌ Ohne Mediakit</span></div>
+              <div className="colspacer" aria-hidden="true"></div>
+              <div className="colhead right"><span className="pill big good">✅ Mit Mediakit</span></div>
+            </div>
 
-        <div className="field">
-          <label htmlFor="tagline" className="label">Repertoire *</label>
-          <textarea
-            className="big-textarea"
-            placeholder="Repertoire …"
-            rows={6}
-            value={repertoireBlock}
-            onChange={(e) => setRepertoireBlock(e.target.value)}
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="tagline" className="label">Tech Rider *</label>
-          <textarea
-            className="big-textarea"
-            placeholder="Technische Anforderungen …"
-            rows={6}
-            value={riderBlock}
-            onChange={(e) => setRiderBlock(e.target.value)}
-          />
-        </div>
-
-        <div className="field">
-          <label className="label">Portrait-Foto *</label>
-          <div className="photo-drop">
-            <input type="file" accept="image/*" required onChange={portraitPhotoChange} />
-            <br />
-            <small className="muted">JPG oder PNG. Hochformat.</small>
-            {portraitPhotoUrl && (
-              <div style={{ marginTop: 8 }}>
-                <img src={portraitPhotoUrl} alt="Vorschau Seite 2" className="preview" />
-              </div>
-            )}
-          </div>
-        </div>
+            <div role="list">
+              <div className="flow-row" role="listitem">
+                <div className="p-card">
+                  <h3>❌  Viel Arbeit für Booker</h3>
+                  <p className="muted">Kein Media Kit = Zusatzaufwand. → Booking-Agenturen haben keine Zeit für langes Nachfragen.</p>
+                </div>
+                <div className="bridge" aria-hidden="true">
+                  <svg viewBox="0 0 60 70" className="arrow" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="var(--brand)" />
+                        <stop offset="100%" stopColor="var(--brand-2)" />
+                      </linearGradient>
+                    </defs>
+                    <polygon points="55,35 5,5 5,65" fill="url(#grad1)" opacity="0.98" />
+                  </svg>
 
 
-        <div className="field">
-          <label className="label">Hero Foto *</label>
-          <div className="photo-drop">
-            <input type="file" accept="image/*" onChange={onPhotoChange} />
-            <br />
-            <small className="muted">JPG oder PNG. Ziel-Format: 1:1.</small>
-
-            {photoUrl && (
-              <div style={{ marginTop: 12 }}>
-                <img src={photoUrl} alt="Vorschau Foto" className="preview" />
-                <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-                  <button type="button" className="btn" onClick={() => setCropOpen(true)}>Foto erneut zuschneiden</button>
+                </div>
+                <div className="s-card">
+                  <h3>✅  Leicht weiterzuempfehlen</h3>
+                  <p className="muted">ein PDF oder Link lässt sich schnell teilen. Mit einem Klick hat alle Infos immer verfügbar: digital/print.</p>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
+
+              <hr className="divider" />
+
+              <div className="flow-row" role="listitem">
+                <div className="p-card">
+                  <h3>❌ Weniger Vertrauen & Glaubwürdigkeit</h3>
+                  <p className="muted">Ein fehlendes Media Kit wirkt wie fehlendes Business-Know-how → Booker zweifeln, ob du zuverlässig bist.</p>
+                </div>
+                <div className="bridge" aria-hidden="true">
+                  <svg viewBox="0 0 60 70" className="arrow" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="var(--brand)" />
+                        <stop offset="100%" stopColor="var(--brand-2)" />
+                      </linearGradient>
+                    </defs>
+                    <polygon points="55,35 5,5 5,65" fill="url(#grad1)" opacity="0.98" />
+                  </svg>
+
+                </div>
+                <div className="s-card">
+                  <h3>✅ Professioneller Auftritt</h3>
+                  <p className="muted">Zeigt, dass du weißt, wie das Geschäft funktioniert. Biografie, Pressetexte, Bilder, Videos, Logos, Social Links und Kontaktdaten übersichtlich gebündelt.
+                  </p>
+                </div>
+              </div>
+
+              <hr className="divider" />
 
 
-        {/*Tempalte*/}
-        <div className="field">
-          <label className="label">Media-Kit Farben</label>
+              <div className="flow-row" role="listitem">
+                <div className="p-card">
+                  <h3>❌ Schlechtere Vermarktungschancen</h3>
+                  <p className="muted">Presse oder Sponsoren brauchen Infos & Fotos sofort → ohne Kit bist du nicht „PR-fähig“</p>
+                </div>
+                <div className="bridge" aria-hidden="true">
+                  <svg viewBox="0 0 60 70" className="arrow" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="var(--brand)" />
+                        <stop offset="100%" stopColor="var(--brand-2)" />
+                      </linearGradient>
+                    </defs>
+                    <polygon points="55,35 5,5 5,65" fill="url(#grad1)" opacity="0.98" />
+                  </svg>
 
-          <div role="radiogroup" aria-label="Template-Farben" className="tpl-grid">
-            {COLOR_TEMPLATES.map((t) => {
-              const active = templateId === t.id;
-              return (
-                <button
-                  key={t.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={active}
-                  onClick={() => setTemplateId(t.id)}
-                  className={`tpl-opt ${active ? "is-active" : ""}`}
-                  style={{
-                    "--c1": t.c1,
-                    "--c2": t.c2,
-                    "--c3": t.c3 ?? t.c1,
-                    "--on-c1": t.on1,
-                    "--on-c2": t.on2,
-                    "--on-c3": t.on3 ?? t.on1,
-                  }}
-                  title={t.name}
-                >
-                  <span className="swatch" />
-                  <span className="swatch" />
-                  <span className="tpl-name">{t.name}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-
-        <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
-          <button type="submit" className="btn primary generate-btn" disabled={busy}>
-            {busy ? "Erzeuge…" : "Media Kit generieren"}
-          </button>
-        </div>
-      </form>
-
-      {/* Crop-Dialog */}
-      {cropOpen && rawPhotoUrl && (
-        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Foto zuschneiden">
-          <div className="modal">
-            <div className="cropper-wrap">
-              <Cropper
-                image={rawPhotoUrl}
-                crop={crop}
-                zoom={zoom}
-                aspect={HERO_ASPECT}
-                onCropChange={setCrop}
-                onZoomChange={setZoom}
-                onCropComplete={(_, croppedPixels) => setCroppedPixels(croppedPixels)}
-                restrictPosition={true}
-                showGrid={false}
-              />
-            </div>
-            <div className="modal-actions">
-              <input
-                type="range"
-                min={1}
-                max={3}
-                step={0.01}
-                value={zoom}
-                onChange={(e) => setZoom(Number(e.target.value))}
-                aria-label="Zoom"
-              />
-              <div style={{ display: "flex", gap: 8 }}>
-                <button type="button" className="btn" onClick={() => setCropOpen(false)}>Abbrechen</button>
-                <button type="button" className="btn primary" onClick={confirmCrop}>Übernehmen</button>
+                </div>
+                <div className="s-card">
+                  <h3>✅  Presse & PR ready</h3>
+                  <p className="muted">Journalist:innen, Blogger:innen, oder Radiostationen, etc. können direkt aus dem Kit zitieren, Fotos nutzen oder dich featuren. Reibungslose Kommunikation.</p>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
         </div>
-      )}
+      </section>
 
-      {portraitCropOpen && rawPortraitPhotoUrl && (
-        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Portrait zuschneiden">
-          <div className="modal">
-            <div className="cropper-wrap">
-              <Cropper
-                image={rawPortraitPhotoUrl}
-                crop={portraitCrop}
-                zoom={portraitZoom}
-                aspect={PORTRAIT_ASPECT}
-                onCropChange={setPortraitCrop}
-                onZoomChange={setPortraitZoom}
-                onCropComplete={(_, cp) => setPortraitCroppedPixels(cp)}
-                restrictPosition={true}
-                showGrid={false}
-              />
+
+ {/* SECTION FÜR MOBILE ONLY */}
+      <section className="section show-on-mobile" aria-label="Problem-Lösung-Vergleich">
+        <div className="container">
+          <section className="flow-box" role="group">
+
+            <div className="flow-cols" aria-label="Spaltenüberschriften">
+              <div className="colhead left"><span className="pill big">❌ Ohne Mediakit</span></div>
             </div>
-            <div className="modal-actions">
-              <input
-                type="range"
-                min={1}
-                max={3}
-                step={0.01}
-                value={portraitZoom}
-                onChange={(e) => setPortraitZoom(Number(e.target.value))}
-                aria-label="Zoom"
-              />
-              <div style={{ display: "flex", gap: 8 }}>
-                <button type="button" className="btn" onClick={() => setPortraitCropOpen(false)}>Abbrechen</button>
-                <button type="button" className="btn primary" onClick={confirmPortraitCrop}>Übernehmen</button>
+
+            <div role="list">
+              <div className="flow-row" role="listitem">
+                <div className="p-card">
+                  <h3>❌  Viel Arbeit für Booker</h3>
+                  <p className="muted">Kein Media Kit = Zusatzaufwand. → Booking-Agenturen haben keine Zeit für langes Nachfragen.</p>
+                </div>
+              </div>
+
+              <hr className="divider" />
+
+              <div className="flow-row" role="listitem">
+                <div className="p-card">
+                  <h3>❌ Weniger Vertrauen & Glaubwürdigkeit</h3>
+                  <p className="muted">Ein fehlendes Media Kit wirkt wie fehlendes Business-Know-how → Booker zweifeln, ob du zuverlässig bist.</p>
+                </div>
+              </div>
+
+              <hr className="divider" />
+
+              <div className="flow-row" role="listitem">
+                <div className="p-card">
+                  <h3>❌ Schlechtere Vermarktungschancen</h3>
+                  <p className="muted">Presse oder Sponsoren brauchen Infos & Fotos sofort → ohne Kit bist du nicht „PR-fähig“</p>
+                </div>
               </div>
             </div>
+          </section>
+        </div>
+      </section>
+
+      <section className="section show-on-mobile" aria-label="Problem-Lösung-Vergleich">
+        <div className="container">
+          <section className="flow-box" role="group">
+
+            <div className="flow-cols" aria-label="Spaltenüberschriften">
+              <div className="colhead right"><span className="pill big good">✅ Mit Mediakit</span></div>
+            </div>
+
+            <div role="list">
+              <div className="flow-row" role="listitem">
+                <div className="s-card">
+                  <h3>✅  Leicht weiterzuempfehlen</h3>
+                  <p className="muted">ein PDF oder Link lässt sich schnell teilen. Mit einem Klick hat alle Infos immer verfügbar: digital/print.</p>
+                </div>
+              </div>
+
+              <hr className="divider" />
+
+              <div className="flow-row" role="listitem">
+                <div className="s-card">
+                  <h3>✅ Professioneller Auftritt</h3>
+                  <p className="muted">Zeigt, dass du weißt, wie das Geschäft funktioniert. Biografie, Pressetexte, Bilder, Videos, Logos, Social Links und Kontaktdaten übersichtlich gebündelt.
+                  </p>
+                </div>
+              </div>
+
+              <hr className="divider" />
+
+              <div className="flow-row" role="listitem">
+                <div className="s-card">
+                  <h3>✅  Presse & PR ready</h3>
+                  <p className="muted">Journalist:innen, Blogger:innen, oder Radiostationen, etc. können direkt aus dem Kit zitieren, Fotos nutzen oder dich featuren. Reibungslose Kommunikation.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      {/* SALES/CTA SECTION – farbig, prominent */}
+      <section className="container section cta-hero" aria-labelledby="mediakit-cta">
+        <div className="cta-wrap">
+          {/* Links: Produktmockup */}
+          <div className="cta-left">
+            <img
+              src={import.meta.env.BASE_URL + 'mockup-mediakit.png'}
+              alt="Produktmockup: Mediakit-Generator"
+            />
+          </div>
+
+          {/* Rechts: Claim + Vorteile + Newsletter/Generator-CTA */}
+          <div className="cta-right">
+            <span className="badge" aria-hidden>
+              100% Gratis
+            </span>
+            <h2 id="mediakit-cta">Kostenlos. Versprochen! - und fertig in Minuten.</h2>
+            <p className="lead">
+              Melde dich an und erhalte zusätzlich kompakte Profi-Tipps & Vorlagen per Newsletter. 
+            </p>
+            <ul className="benefits" aria-label="Vorteile">
+              <li>Erstelle dein Mediakit ohne Vorkentnisse</li>
+              <li>Direkt im Browser, ohne Software</li>
+              <li>Export als Link oder PDF</li>
+              <li>Bewährte Layouts für Booking & PR</li>
+            </ul>
+             <h3 id="mediakit-cta">Melde dich jetzt an und wir senden dir in den nächsten Tagen persönlich den Zugang zu deinem Mediakit-Generator.</h3>
+            <SignupForm className="cta-form" />
           </div>
         </div>
-      )}
+      </section>
 
+      {/* KURSE */}
+      {/*
+      <section id="kurse" className="container section" aria-labelledby="kurse-title">
+        <h2 id="kurse-title">Vielleicht ineressieren dich auch unsere Kurse:</h2>
+        <div className="grid">
+          <article className="card">
+            <div className="thumb" role="img" aria-label="Kursbild – Steuern & Finanzen">
+              <img src={import.meta.env.BASE_URL + '/kurse/sales.jpeg'} alt="Kursbild: Marketing & Sales" loading="lazy" />
+            </div>
+            <div className="content">
+              <div className="title">Marketing & Sales</div>
+              <div className="meta">6 Stunden • 7 Module • 25 Videos</div>
+              <div className="price">€ 99</div>
+              <div className="actions">
+                <Link to="/kurs/steuern-finanzen" className="btn primary">Mehr zum Kurs</Link>
+              </div>
+            </div>
+          </article>
+          <article className="card">
+            <div className="thumb" role="img" aria-label="Kursbild – Marketing und Vertrieb">
+              <img src={import.meta.env.BASE_URL + '/kurse/finanzen.jpeg'} alt="Kursbild: Marketing & Sales" loading="lazy" />
+
+            </div>
+            <div className="content">
+              <div className="title">Finanzen & Steuern</div>
+              <div className="meta">5 Stunden • 6 Module • 20 Videos</div>
+              <div className="price">€ 129</div>
+              <div className="actions">
+                <Link to="/kurs/marketing" className="btn primary">Mehr zum Kurs</Link>
+              </div>
+            </div>
+          </article>
+          <article className="card">
+            <div className="thumb" role="img" aria-label="Kursbild – Bühnenshows und Entertainment">
+              <img src={import.meta.env.BASE_URL + 'kurse/workflow.jpeg'} alt="Kursbild – Bühnenshows und Entertainment" loading="lazy" />
+
+            </div>
+            <div className="content">
+              <div className="title">Zeitmanagement, Mindset & Workflow</div>
+              <div className="meta">6 Stunden • 7 Module • 25 Videos</div>
+              <div className="price">€ 139</div>
+              <div className="actions">
+                <Link to="/kurs/buehnenshows" className="btn primary">Mehr zum Kurs</Link>
+              </div>
+            </div>
+          </article>
+          <article className="card">
+            <div className="thumb" role="img" aria-label="Kursbild – Steuern & Finanzen">
+              <img src={import.meta.env.BASE_URL + '/kurse/showact.jpeg'} alt="Kursbild: Marketing & Sales" loading="lazy" />
+            </div>
+            <div className="content">
+              <div className="title">Showact & Entertainment</div>
+              <div className="meta">6 Stunden • 6 Modiule • 22 Videos</div>
+              <div className="price">€ 99</div>
+              <div className="actions">
+                <Link to="/kurs/steuern-finanzen" className="btn primary">Mehr zum Kurs</Link>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      */}
+      <PreviewModal open={showPreview} onClose={() => setShowPreview(false)} />
     </main>
-  );
+  )
 }

@@ -371,11 +371,11 @@ export default function Home() {
           {/* Rechts: Claim + Vorteile + Newsletter/Generator-CTA */}
           <div className="cta-right">
             <span className="badge" aria-hidden>
-              KOSTENLOS
+              100% Gratis
             </span>
             <h2 id="mediakit-cta">Kostenlos. Versprochen! - und fertig in Minuten.</h2>
             <p className="lead">
-              Sofortiger Zugang zum <strong>Mediakit‑Generator</strong>. Melde dich an und erhalte zusätzlich kompakte Profi-Tipps & Vorlagen per Newsletter.
+              Melde dich an und erhalte zusätzlich kompakte Profi-Tipps & Vorlagen per Newsletter. 
             </p>
             <ul className="benefits" aria-label="Vorteile">
               <li>Erstelle dein Mediakit ohne Vorkentnisse</li>
@@ -383,6 +383,7 @@ export default function Home() {
               <li>Export als Link oder PDF</li>
               <li>Bewährte Layouts für Booking & PR</li>
             </ul>
+             <h3 id="mediakit-cta">Melde dich jetzt an und wir senden dir in den nächsten Tagen persönlich den Zugang zu deinem Mediakit-Generator.</h3>
             <SignupForm className="cta-form" />
           </div>
         </div>
