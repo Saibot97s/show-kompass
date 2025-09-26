@@ -378,7 +378,7 @@ export default function Home() {
               Sofortiger Zugang zum <strong>Mediakit‑Generator</strong>. Melde dich an und erhalte zusätzlich kompakte Profi-Tipps & Vorlagen per Newsletter.
             </p>
             <ul className="benefits" aria-label="Vorteile">
-              <li>Erstelle dein Mediakit in Minuten</li>
+              <li>Erstelle dein Mediakit ohne Vorkentnisse</li>
               <li>Direkt im Browser, ohne Software</li>
               <li>Export als Link oder PDF</li>
               <li>Bewährte Layouts für Booking & PR</li>

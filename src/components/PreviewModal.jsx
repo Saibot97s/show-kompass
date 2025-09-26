@@ -19,7 +19,7 @@ export default function PreviewModal({ open, onClose }){
       <div className="video-wrap">
         {open && (
           <iframe
-            src="https://www.youtube-nocookie.com/embed/8MUWTRnI3j0?autoplay=1&rel=0"
+            src="https://www.youtube-nocookie.com/embed/BVxK_4_L6wQ?si=DoBpufy9wEOuOOBm"
             title="Kursvorschau"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
