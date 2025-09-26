@@ -2,7 +2,7 @@
 <title>Umleitung…</title>
 <script>
   (function () {
-    var repo = "/REPO_NAME";
+    var repo = "/show-kompass";
     var full = location.pathname + location.search + location.hash;
     var rel  = full.startsWith(repo) ? full.slice(repo.length) : full;
     sessionStorage.setItem("gh-spa-redirect", rel);
