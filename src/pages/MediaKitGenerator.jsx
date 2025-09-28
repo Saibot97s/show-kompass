@@ -8,7 +8,7 @@ const TEMPLATE_URL = "/templates/mediakit.html";
 const HERO_ASPECT = 1 / 1;
 const PORTRAIT_ASPECT = 3 / 4;
 
-console.log("MediaKit Component wurde geladen!");
+console.log("MediaKit Component wurde geladen. 29. September!");
 
 function isIOS() {
   const ua = navigator.userAgent || "";

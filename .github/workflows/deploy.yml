@@ -2,7 +2,8 @@ name: Deploy static site to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ show-kompass ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -25,14 +26,5 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: touch dist/.nojekyll
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
-          path: ./dist
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
-
-
