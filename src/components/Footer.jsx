@@ -7,7 +7,7 @@ export default function Footer() {
       <p>
         © <span>{year}</span> ShowKompass ·{" "}
         <a href="/privacy">Impressum & Datenschutz</a>;
-        · v0.0.9
+        · v0.0.10
       </p>
     </footer>
   );
