@@ -450,8 +450,8 @@ export default function Home() {
           </article>
         </div>
       </section>
-
       */}
+
       <PreviewModal open={showPreview} onClose={() => setShowPreview(false)} />
     </main>
   )
