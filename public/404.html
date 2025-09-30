@@ -1,3 +1,7 @@
-<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Umleitung…</title>
-</html>
+<!-- public/404.html -->
+<!doctype html><meta charset="utf-8">
+<script>
+  // Pfad & Query & Hash merken, dann zur Root leiten
+  sessionStorage.redirectPath = location.pathname + location.search + location.hash;
+  location.replace("/");
+</script>

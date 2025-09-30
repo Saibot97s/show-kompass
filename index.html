@@ -22,6 +22,18 @@
 
   <body>
     <div id="root"></div>
+
+    <script>
+  (function () {
+    const p = sessionStorage.redirectPath;
+    if (p) {
+      // einmalig zurückschreiben, damit React Router korrekt matched
+      sessionStorage.removeItem("redirectPath");
+      history.replaceState(null, "", p);
+    }
+  })();
+</script>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 
