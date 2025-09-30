@@ -18,16 +18,22 @@
     });
   </script>
 
-  <!-- DEV: Lade den Source-Entry, damit Hot Reload funktioniert -->
-
-
-  <script type="module" crossorigin src="/assets/index-16rcZHXO.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-B3jmigGQ.css">
-
+  <script type="module" crossorigin src="/assets/index-7lBsXt7w.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Bq7Sow--.css">
 </head>
-
   <body>
     <div id="root"></div>
+
+    <!-- SPA-Deep-Link Rewriter (muss VOR dem Module-Script stehen) -->
+    <script>
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function(s){ return s.replace(/~and~/g,'&') }).join('?');
+          window.history.replaceState(null, null, decoded + l.hash);
+        }
+      }(window.location));
+    </script>
+
   </body>
 
 </html>
