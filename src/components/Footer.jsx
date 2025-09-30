@@ -6,8 +6,7 @@ export default function Footer() {
     <footer id="kontakt" className="container">
       <p>
         © <span>{year}</span> ShowKompass ·{" "}
-        <a href="/privacy">Impressum & Datenschutz</a>;
-        · v0.0.10
+        <Link to="/privacy">Impressum &amp; Datenschutz</Link> · v0.0.11
       </p>
     </footer>
   );
