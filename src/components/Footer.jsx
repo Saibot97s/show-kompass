@@ -4,10 +4,10 @@ export default function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer id="kontakt" className="container">
-      <p>
+     {/* <p>
         © <span>{year}</span> ShowKompass ·{" "}
         <Link to="/privacy">Impressum &amp; Datenschutz</Link> · v0.0.11
-      </p>
+      </p> */}
     </footer>
   );
 }
