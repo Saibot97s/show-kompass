@@ -390,7 +390,6 @@ export default function Home() {
       </section>
 
       {/* KURSE */}
-      {/*
       <section id="kurse" className="container section" aria-labelledby="kurse-title">
         <h2 id="kurse-title">Vielleicht ineressieren dich auch unsere Kurse:</h2>
         <div className="grid">
@@ -450,7 +449,6 @@ export default function Home() {
           </article>
         </div>
       </section>
-      */}
 
       <PreviewModal open={showPreview} onClose={() => setShowPreview(false)} />
     </main>

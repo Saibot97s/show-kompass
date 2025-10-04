@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function SignupForm({ className }) {
@@ -9,23 +9,46 @@ export default function SignupForm({ className }) {
   const iframeRef = useRef(null);
   const navigate = useNavigate();
 
+  // Verhindert doppeltes Lead-Event (z. B. in Strict Mode / mehrfaches onLoad)
+  const leadFiredRef = useRef(false);
+
   // Mailchimp-Action exakt aus deinem Embed (echte & statt &amp;)
   const MC_ACTION =
     "https://us19.list-manage.com/subscribe/post?u=2ba12036c00c7bce1283f2d64&id=5c660d7608&f_id=00c4c2e1f0";
-
 
   const handleSubmit = () => {
     setSubmitted(true);
     setLoading(true);
     setMsg(null);
+    leadFiredRef.current = false; // Reset vor neuem Submit
   };
 
   const handleIframeLoad = () => {
-    if (!submitted) return;
+    if (!submitted) return;               // nur nach einem Submit reagieren
+    if (leadFiredRef.current) return;     // Doppel-Trigger vermeiden
+
     setLoading(false);
     setMsg("Danke dir. Wir schicken dir in den nächsten Tagen deinen Zugang.");
-    // Weiter zum Generator
-    //navigate("/mediakit");
+
+    // Facebook Lead auslösen NACH Mailchimp-Antwort
+    // (PageView kommt aus dem globalen Pixel-Snippet)
+    if (typeof window !== "undefined" && window.fbq) {
+      // kleiner Timeout stellt sicher, dass fbq initialisiert ist
+      setTimeout(() => {
+        if (!leadFiredRef.current) {
+          window.fbq("track", "Lead", {
+            content_name: "Mailchimp Signup",
+            // keine PII wie E-Mail mitschicken
+            // optional: value/currency
+            // value: 0, currency: "EUR",
+          });
+          leadFiredRef.current = true;
+        }
+      }, 0);
+    }
+
+    // Optional: Weiterleitung nach Anmeldung
+    // navigate("/mediakit");
   };
 
   return (
