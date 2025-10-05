@@ -4,7 +4,6 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Course from './pages/Course';
 import Privacy from './pages/Privacy';
-import MediaKit from './pages/MediaKit';
 import MediaKitGenerator from './pages/MediaKitGenerator';
 import NotFound from './pages/NotFound';
 
@@ -14,7 +13,7 @@ export default function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/mediakit" element={<MediaKit />} />
+        <Route path="/mediakit" element={<Home />} />
         <Route path="/mediakit/3Fy9" element={<MediaKitGenerator />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/kurs/:slug" element={<Course />} />

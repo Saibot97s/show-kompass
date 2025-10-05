@@ -360,13 +360,12 @@ header {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 22px;
 }
 
 .card {
   grid-column: span 12;
-  /* 1 Spalte mobil */
   background: var(--surface);
   border: 1px solid rgba(2, 6, 23, 0.08);
   border-radius: var(--radius);
@@ -375,14 +374,13 @@ header {
   flex-direction: column;
   box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
   min-width: 0;
-  /* wichtig in Grids */
 }
 
 .content {
   padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   min-width: 0;
 }
 
@@ -395,7 +393,7 @@ header {
 /* 2 pro Reihe */
 @media (min-width: 1024px) {
   .card {
-    grid-column: span 3;
+    grid-column: span 2;
   }
 }
 
@@ -439,9 +437,17 @@ header {
   letter-spacing: .2px;
 }
 
+.title_box {
+  display: flex;
+  align-items: baseline;     /* gleiche Grundlinie */
+  justify-content: space-between; /* Preis ganz nach rechts */
+  gap: 12px;
+}
+
 .meta {
   color: var(--muted);
   font-size: var(--fs-sm);
+  padding-top: 0px;
 }
 
 .price {
@@ -927,11 +933,22 @@ dialog {
   gap: var(--gap, 16px);
 }
 
+.field {
+  margin-bottom: 40px;
+  margin-top: 40px;
+  padding: 15px;
+  background-color: #00000004;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+
 .field .label {
   display: block;
-  font-weight: 600;
+  font-weight: 400;
   margin-bottom: 6px;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-lg);
+  margin-top: 5px;
 }
 
 .field input,
@@ -1740,10 +1757,6 @@ h2 {
   box-shadow: 0 10px 30px rgba(2, 6, 23, .08);
 }
 
-.field {
-  margin-bottom: 16px;
-}
-
 .label {
   display: block;
   font-weight: 700;
@@ -1899,3 +1912,53 @@ h2 {
 .tpl-opt .swatch:nth-of-type(2) { background: var(--c2); }
 
 .tpl-name { font-size: 13px; color: #374151; }
+
+
+
+
+
+.course img {
+  display: block;       /* keine Inline-Lücken */
+  max-width: 100%;
+}
+
+
+.lesson-item {
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  overflow: hidden; /* falls etwas trotzdem drüber steht */
+}
+
+/* --- Karte/Item --- */
+.lesson-item {
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  overflow: hidden; /* falls etwas trotzdem drüber steht */
+}
+
+/* Inhalt: links Thumb, rechts Text */
+.lesson-inner {
+  display: grid;
+  grid-template-columns: 180px 1fr; /* fixe Thumb-Breite */
+  gap: 14px;
+  align-items: start;
+  padding: 12px;
+}
+
+/* --- Thumbnail-Box: gleiche Größe für alle --- */
+.lesson-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* EINHEITLICH! (z.B. 16:9) */
+  overflow: hidden;       /* Überstände abschneiden */
+  border-radius: 8px;
+  background: var(--wash, #f3f4f6);
+}
+
+/* Bild füllt die Box, schneidet sauber zu */
+.lesson-thumb > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

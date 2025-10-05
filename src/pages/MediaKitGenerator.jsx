@@ -174,14 +174,13 @@ async function waitForImages(root) {
   }));
 }
 
-
 export default function MediaKitGenerator() {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("[Name] ist ein/e [Genre]-Musiker/in aus [Ort], der/die seit [Jahr] Musik veröffentlicht. Erste Erfolge waren [Highlight 1] und [Highlight 2]. Sein/ihr Sound bewegt sich zwischen [Genre/Einflüsse] und [besondere Merkmale]. [Name] begann mit [Instrument] im Alter von [X Jahren]. Inspiriert von [Einflüsse] entwickelte er/sie einen Stil, der [Beschreibung des Sounds]. Zurzeit arbeitet [Name] an [Projekt/Release/Tour]. Zusätzlich ist er/sie in [Nebenprojekte] involviert. In den kommenden Monaten stehen [Events/Shows] an.");
   const [photoUrl, setPhotoUrl] = useState(""); // final (DataURL, ggf. zugeschnitten)
   const [rawPhotoUrl, setRawPhotoUrl] = useState(""); // original DataURL vorm Zuschnitt
   const [tagline, setTagline] = useState("");
-  const [contact, setContact] = useState("DEIN NAME\ndeine@email.com\n+00 000 000\nInsta @instagram\nTiktok @tikto");
+  const [contact, setContact] = useState("DEIN NAME\ndeine@email.com\n+00 000 000\nInsta @instagram\nTiktok @tiktok");
   const [heroText, setHeroText] = useState("[Name] verbindet druckvolle [Genre/Mix: z. B. Melodic & Tech House] mit organischen Samples und detailverliebten Arrangements. Ideal für [Event-Typ] und andere Events.\n \n Bekannt aus: Bekannt aus: [Sender 1] · [Zeitung 1]");
   const [ctaUrl, setCtaUrl] = useState("");
   const [ctaLabel, setCtaLabel] = useState("Jetzt ansehen");
@@ -193,7 +192,7 @@ export default function MediaKitGenerator() {
   // Seite 2
   const [bioBlock, setBioBlock] = useState("[Name] ist ein/e [Genre]-Musiker/in aus [Ort], der/die seit [Jahr] Musik veröffentlicht. Erste Erfolge waren [Highlight 1] und [Highlight 2]. Sein/ihr Sound bewegt sich zwischen [Genre/Einflüsse] und [besondere Merkmale]. [Name] begann mit [Instrument] im Alter von [X Jahren]. Inspiriert von [Einflüsse] entwickelte er/sie einen Stil, der [Beschreibung des Sounds]. Zurzeit arbeitet [Name] an [Projekt/Release/Tour]. Zusätzlich ist er/sie in [Nebenprojekte] involviert. In den kommenden Monaten stehen [Events/Shows] an.");
   const [repertoireBlock, setRepertoireBlock] = useState("");
-  const [riderBlock, setRiderBlock] = useState("");
+  const [riderBlock, setRiderBlock] = useState("Bühne mind. 3x2 m, Stromanschluss (230 V Schuko) bühnennah, 1x Gesangsmikrofon (z. B. SM58), 1x Mikrofonständer, 1x DI-Box oder Klinke-Kabel (3,5 mm auf 2x XLR/Klinke) für Playback, 1x Monitor (Boden oder In-Ear), PA-Anlage passend zur Raumgröße, Mischpult min. 2 Kanäle (Gesang + Playback), Grundbeleuchtung mit weichem Frontlicht \n \n Vorbereitung: \nSoundcheck ca. 15 Min., Aufbauzeit ca. 20–30 Min., Zuspielung über eigenes Abspielgerät (Laptop/Smartphone), Backstage: Umkleide. Outdoor: überdachte Bühne erforderlich, keine direkte Sonne oder Regen auf Technik/Künstlerin.");
 
   // Bild für Seite 2
   const [portraitPhotoUrl, setPortraitPhotoUrl] = useState("");
@@ -449,6 +448,9 @@ export default function MediaKitGenerator() {
       <form className="form-card" onSubmit={onGenerate}>
 
 
+        <h3>Glückwunsch zu deinem kostenlosen Mediakit</h3>
+        <p>Fülle die Felder unten aus, um in wenigen Minuten ein individuelles Mediakit zu erstellen. Ideal für Bookings, Pressearbeit oder Förderanträge.
+Einfach die Fragen beantworten – wir übernehmen die Formatierung und den Feinschliff.</p>
 
         <div className="field">
           <label htmlFor="mk-name" className="label">Name *</label>
@@ -481,7 +483,7 @@ export default function MediaKitGenerator() {
           <label htmlFor="tagline" className="label">Kurzbeschriebung Titelblatt</label>
           <textarea
             className="big-textarea"
-            placeholder={"[Name] verbindet druckvolle [Genre/Mix: z. B. Melodic & Tech House] mit organischen Samples und detailverliebten Arrangements. Ideal für [Event-Typ] und andere Events.\n \n Bekannt aus: Bekannt aus: [Sender 1] · [Zeitung 1]"}
+            placeholder={"[Name] verbindet eindrucksvolle [Genre/Mix: z. B. Melodic & Tech House] mit organischen Samples und detailverliebten Arrangements. Ideal für [Event-Typ] und andere Veranstaltungen.\n \n Bekannt aus: Bekannt aus: [Sender 1] · [Zeitung 1]"}
             rows={6}
             value={heroText}
             onChange={(e) => setHeroText(e.target.value)}
@@ -501,7 +503,8 @@ export default function MediaKitGenerator() {
         </div>
 
         <div className="field">
-          <label htmlFor="tagline" className="label">CTA URL & LAbel *</label>
+          <label htmlFor="tagline" className="label">CTA URL & Label *</label>
+          <p>Füge hier die gesamte URL aus der Adresszeile ein. Es kann ein Link zu einem Video, einem Ordner oder einer Website sein. Überlege dir gut: Wohin möchtest du deine Interessent:innen am liebsten weiterleiten.</p>
           <div style={{ display: "flex", gap: 8 }}>
             <input
               className="big-input"
@@ -571,11 +574,12 @@ export default function MediaKitGenerator() {
           />
         </div>
 
+
         <div className="field">
           <label htmlFor="tagline" className="label">Repertoire *</label>
           <textarea
             className="big-textarea"
-            placeholder="Repertoire …"
+            placeholder="Liste hier deine Songs auf: Songname 1  (Interpret), Songname 2 (Interpret),..."
             rows={6}
             value={repertoireBlock}
             onChange={(e) => setRepertoireBlock(e.target.value)}
@@ -586,7 +590,7 @@ export default function MediaKitGenerator() {
           <label htmlFor="tagline" className="label">Tech Rider *</label>
           <textarea
             className="big-textarea"
-            placeholder="Technische Anforderungen …"
+            placeholder="Bühne mind. 3x2 m, Stromanschluss (230 V Schuko) bühnennah, 1x Gesangsmikrofon (z. B. SM58), 1x Mikrofonständer, 1x DI-Box oder Klinke-Kabel (3,5 mm auf 2x XLR/Klinke) für Playback, 1x Monitor (Boden oder In-Ear), PA-Anlage passend zur Raumgröße, Mischpult min. 2 Kanäle (Gesang + Playback), Grundbeleuchtung mit weichem Frontlicht, Soundcheck ca. 15 Min., Aufbauzeit ca. 20–30 Min., Zuspielung über eigenes Abspielgerät (Laptop/Smartphone), Backstage: Umkleide. Outdoor: überdachte Bühne erforderlich, keine direkte Sonne oder Regen auf Technik/Künstlerin."
             rows={6}
             value={riderBlock}
             onChange={(e) => setRiderBlock(e.target.value)}

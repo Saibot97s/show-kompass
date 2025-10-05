@@ -26,14 +26,13 @@ export default function Home() {
               Mit Vorlage, Auto-Layout und 1-Klick-Export als PDF.
             </p>
 
-
             <br />    <br />
-
 
             <br />
 
             {/* CTA */}
             <SignupForm className="cta-form" />
+
 
             <br />
             <div className="proof" aria-live="polite">
@@ -279,7 +278,7 @@ export default function Home() {
       </section>
 
 
- {/* SECTION FÜR MOBILE ONLY */}
+      {/* SECTION FÜR MOBILE ONLY */}
       <section className="section show-on-mobile" aria-label="Problem-Lösung-Vergleich">
         <div className="container">
           <section className="flow-box" role="group">
@@ -357,6 +356,9 @@ export default function Home() {
         </div>
       </section>
 
+      <br />      <br />
+
+
       {/* SALES/CTA SECTION – farbig, prominent */}
       <section className="container section cta-hero" aria-labelledby="mediakit-cta">
         <div className="cta-wrap">
@@ -375,7 +377,7 @@ export default function Home() {
             </span>
             <h2 id="mediakit-cta">Kostenlos. Versprochen! - und fertig in Minuten.</h2>
             <p className="lead">
-              Melde dich an und erhalte zusätzlich kompakte Profi-Tipps & Vorlagen per Newsletter. 
+              Melde dich an und erhalte zusätzlich kompakte Profi-Tipps & Vorlagen per Newsletter.
             </p>
             <ul className="benefits" aria-label="Vorteile">
               <li>Erstelle dein Mediakit ohne Vorkentnisse</li>
@@ -383,11 +385,17 @@ export default function Home() {
               <li>Export als Link oder PDF</li>
               <li>Bewährte Layouts für Booking & PR</li>
             </ul>
-             <h3 id="mediakit-cta">Melde dich jetzt an und wir senden dir in den nächsten Tagen persönlich den Zugang zu deinem Mediakit-Generator.</h3>
+            <h3 id="mediakit-cta">Melde dich jetzt an und wir senden dir in den nächsten Tagen persönlich den Zugang zu deinem Mediakit-Generator.</h3>
             <SignupForm className="cta-form" />
           </div>
         </div>
       </section>
+
+
+      <br />      <br />
+
+
+
 
       {/* KURSE */}
       <section id="kurse" className="container section" aria-labelledby="kurse-title">
@@ -395,55 +403,74 @@ export default function Home() {
         <div className="grid">
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Steuern & Finanzen">
-              <img src={import.meta.env.BASE_URL + '/kurse/sales.jpeg'} alt="Kursbild: Marketing & Sales" loading="lazy" />
+              <img src={import.meta.env.BASE_URL + 'kurse/sales.jpeg'} alt="Kursbild: Marketing & Sales" loading="lazy" />
             </div>
             <div className="content">
-              <div className="title">Marketing & Sales</div>
-              <div className="meta">6 Stunden • 7 Module • 25 Videos</div>
-              <div className="price">€ 99</div>
+              <div>
+                <div className='title_box'>
+                  <div className="title">Marketing & Sales</div>
+                  <div className="price">€ 499</div>
+                </div>
+                <div className="meta">7 Stunden • 4 Module • 21 Videos</div>
+              </div>
+              Lerne, wie du dich professionell nach außen präsentierst – online und offline. Von Markenaufbau über Social Media, Pressearbeit und praxisnahen Strategien für Akquise, Sales-Kanäle und den direkten Weg zu mehr Auftritten.
+              <br /><br />
               <div className="actions">
-                <Link to="/kurs/steuern-finanzen" className="btn primary">Mehr zum Kurs</Link>
+                <Link to="/kurs/marketing-sales" className="btn primary">Mehr Infos zum Kurs</Link>
               </div>
             </div>
           </article>
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Marketing und Vertrieb">
-              <img src={import.meta.env.BASE_URL + '/kurse/finanzen.jpeg'} alt="Kursbild: Marketing & Sales" loading="lazy" />
-
+              <img src={import.meta.env.BASE_URL + 'kurse/finanzen.jpeg'} alt="Kursbild: Marketing & Sales" loading="lazy" />
             </div>
             <div className="content">
-              <div className="title">Finanzen & Steuern</div>
-              <div className="meta">5 Stunden • 6 Module • 20 Videos</div>
-              <div className="price">€ 129</div>
+              <div>
+                <div className='title_box'>
+                  <div className="title">Finanzen und Steuern</div>
+                  <div className="price">€ 499</div>
+                </div>
+                <div className="meta">7 Stunden • 6 Module • 32 Videos</div>
+              </div>
+              Mit dem Wissen der ältesten Steuerkanzlei Wiens lernst du, wie du Steuern optimierst, Förderungen richtig nutzt und deine Gagen professionell kalkulierst. So vermeidest du teure Fehler und schaffst finanzielle Sicherheit für deine Karriere.
+              <br /><br />
               <div className="actions">
-                <Link to="/kurs/marketing" className="btn primary">Mehr zum Kurs</Link>
+                <Link to="/kurs/steuern-finanzen" className="btn primary">Mehr Infos zum Kurs</Link>
               </div>
             </div>
           </article>
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Bühnenshows und Entertainment">
               <img src={import.meta.env.BASE_URL + 'kurse/workflow.jpeg'} alt="Kursbild – Bühnenshows und Entertainment" loading="lazy" />
-
             </div>
             <div className="content">
-              <div className="title">Zeitmanagement, Mindset & Workflow</div>
-              <div className="meta">6 Stunden • 7 Module • 25 Videos</div>
-              <div className="price">€ 139</div>
+              <div>
+                <div className='title_box'>
+                  <div className="title">Zeit, Mindset & Workflow</div>
+                  <div className="price">€ 149</div>
+                </div>
+                <div className="meta">3 Stunden • 3 Module • 12 Videos</div>
+              </div>
+              Mit meinem erprobten Set aus kostenlosen Tools und Zeitmanagement-Techniken bringst du Struktur in deinen Musiker:innen-Alltag und steigerst deine Effizienz. Ergänzende Mindset-Strategien stärken deine Vision, halten dich fokussiert und vermeiden Fallen wie Aufschieberitis oder Workflow-Chaos.
               <div className="actions">
-                <Link to="/kurs/buehnenshows" className="btn primary">Mehr zum Kurs</Link>
+                <Link to="/kurs/workflow" className="btn primary">Mehr Infos zum Kurs</Link>
               </div>
             </div>
           </article>
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Steuern & Finanzen">
-              <img src={import.meta.env.BASE_URL + '/kurse/showact.jpeg'} alt="Kursbild: Marketing & Sales" loading="lazy" />
-            </div>
+              <img src={import.meta.env.BASE_URL + 'kurse/showact.jpeg'} alt="Kursbild: Steuern & Finanzen" loading="lazy" />            </div>
             <div className="content">
-              <div className="title">Showact & Entertainment</div>
-              <div className="meta">6 Stunden • 6 Modiule • 22 Videos</div>
-              <div className="price">€ 99</div>
+              <div>
+                <div className='title_box'>
+                  <div className="title">Showact & Entertainment</div>
+                  <div className="price">€ 499</div>
+                </div>
+                <div className="meta">5 Stunden • 4 Modiule • 21 Videos</div>
+              </div>
+              Lerne, wie du aus deiner Musik eine unvergessliche Show machst. Von Storyboard und Moderation über den roten Faden deines Programms bis hin zu Performance-Tipps, Umgang mit Lampenfieber und Publikumsbindung. Ergänzt durch praxisnahe Einblicke in technisches Equipment und Software, die deinen Auftritt auf ein neues Level heben.
               <div className="actions">
-                <Link to="/kurs/steuern-finanzen" className="btn primary">Mehr zum Kurs</Link>
+                <Link to="/kurs/showkonzept" className="btn primary">Mehr Infos zum Kurs</Link>
               </div>
             </div>
           </article>
