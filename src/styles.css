@@ -675,12 +675,20 @@ dialog {
   align-items: center;
 }
 
+/* Bild bleibt sauber */
 .lesson-thumb {
   width: 100%;
   aspect-ratio: 16/9;
   border-radius: 8px;
-  object-fit: cover;
+  overflow: hidden;
   border: 1px solid rgba(2, 6, 23, 0.08);
+}
+.lesson-thumb img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: inherit;
 }
 
 .lesson-top {
@@ -689,11 +697,29 @@ dialog {
   justify-content: space-between;
   gap: 12px;
 }
-
 .lesson-desc {
   margin: 6px 0 0;
   font-size: var(--fs-sm);
   line-height: var(--lh-normal);
+}
+
+/* Mobile: 1 Spalte + Text/Bild über volle Breite */
+@media (max-width: 640px) {
+  .lesson-inner {
+    grid-template-columns: 1fr; /* statt 140px 1fr */
+    align-items: start;
+  }
+
+  /* spannt beide Bereiche sicher über alle Spalten */
+  .lesson-thumb,
+  .lesson-text {
+    grid-column: 1 / -1;
+  }
+
+  /* verhindert, dass lange Inhalte die Breite begrenzen */
+  .lesson-text {
+    min-width: 0;
+  }
 }
 
 @media (max-width: 640px) {

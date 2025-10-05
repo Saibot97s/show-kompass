@@ -396,10 +396,9 @@ export default function Home() {
 
 
 
-
       {/* KURSE */}
       <section id="kurse" className="container section" aria-labelledby="kurse-title">
-        <h2 id="kurse-title">Vielleicht ineressieren dich auch unsere Kurse:</h2>
+        <h2 id="kurse-title">Vielleicht interessieren dich auch unsere Kurse:</h2>
         <div className="grid">
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Steuern & Finanzen">
