@@ -98,7 +98,7 @@ export default function Home() {
             <h2 id="mediakit-title">Was ist ein Mediakit?</h2>
 
             <p>
-              Ein <strong>Mediakit</strong> ist deine digitale Visitenkarte als Musiker:in. Es fasst alle wichtigen Infos über dich, deine Musik und deine Auftritte in einem professionellen Dokument zusammen – klar, ansprechend und überzeugend.
+              Ein <strong>Mediakit</strong> ist deine digitale Visitenkarte als Musiker:in. Es fasst alle wichtigen Infos über dich, deine Musik und deine Auftritte in einem professionellen Dokument zusammen: klar, ansprechend und überzeugend.
             </p>
             <ul>
               <li> Vorstellung deiner Person und deiner Musik</li>
@@ -107,7 +107,7 @@ export default function Home() {
               <li> Kontaktdaten & Buchungsinfos</li>
             </ul>
             <p>
-              Mit einem Mediakit überzeugst du Veranstalter:innen, Hotels oder Firmen auf den ersten Blick – und erhöhst so deine Chancen auf neue Auftritte und Kooperationen.
+              Mit einem Mediakit überzeugst du Veranstalter:innen, Hotels oder Firmen auf den ersten Blick und erhöhst so deine Chancen auf neue Auftritte und Kooperationen.
             </p>
           </div>
         </div>
@@ -165,8 +165,8 @@ export default function Home() {
 
             <p>
               Ich bin Musiker, Autor und Businessmensch. Vor einigen Jahren habe ich ein ungewöhnliches Handwerk für mich entdeckt: das Pfeifen.
-              Ja, richtig gehört – ich pfeife auf der Bühne. Und klar, du fragst dich: Wer engagiert einen Kunstpfeifer? Genau diese Frage habe ich mir am Anfang auch gestellt. Heute halte ich den Weltrekord und war in unzähligen TV- , Radio- und Printmedien vertreten. Nicht, weil ich der beste Musiker bin – weit gefehlt. Sondern weil ich meine
-              unternehmerische Erfahrung in meine Kunst einfließen ließ, dem Markt zugehört und das passende Produkt geschnürt habe. So konnte ich daraus ein Business bauen. – und genau das kannst du auch.
+              Ja, richtig gehört, ich pfeife auf der Bühne. Und klar, du fragst dich: Wer engagiert einen Kunstpfeifer? Genau diese Frage habe ich mir am Anfang auch gestellt. Heute halte ich den Weltrekord und war in unzähligen TV- , Radio- und Printmedien vertreten. Nicht, weil ich der beste Musiker bin. Sondern weil ich meine
+              unternehmerische Erfahrung in meine Kunst einfließen ließ, dem Markt zugehört und das passende Produkt geschnürt habe. So konnte ich daraus ein Business bauen. Und genau das kannst du auch.
             </p>
             <h4>Du kennst mich vielleicht aus:</h4>
 
@@ -398,7 +398,7 @@ export default function Home() {
 
       {/* KURSE */}
       <section id="kurse" className="container section" aria-labelledby="kurse-title">
-        <h2 id="kurse-title">Vielleicht interessieren dich auch unsere Kurse:</h2>
+        <h2 id="kurse-title">Lust auf mehr? Schau dir unsere Kurse an!</h2>
         <div className="grid">
           <article className="card">
             <div className="thumb" role="img" aria-label="Kursbild – Steuern & Finanzen">
