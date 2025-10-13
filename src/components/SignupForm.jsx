@@ -35,7 +35,7 @@ const MC_ACTION =
 
     // optionales Facebook Pixel
     if (typeof window !== "undefined" && typeof window.fbq === "function") {
-      window.fbq("track", "Lead", { content_name: "Mailchimp Signup" });
+      window.fbq("track", "Purchase", { content_name: "Mailchimp Signup" });
     }
     leadFiredRef.current = true;
   }
