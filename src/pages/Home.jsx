@@ -415,7 +415,9 @@ export default function Home() {
               Lerne, wie du dich professionell nach außen präsentierst – online und offline. Von Markenaufbau über Social Media, Pressearbeit und praxisnahen Strategien für Akquise, Sales-Kanäle und den direkten Weg zu mehr Auftritten.
               <br /><br />
               <div className="actions">
-                <Link to="/kurs/marketing-sales" className="btn primary">Mehr Infos zum Kurs</Link>
+                <Link to="/kurs/marketing-sales" className="btn primary"
+                onClick={() => posthog.capture('Course clicked', { kurs: 'Marketing & Sales' })}>
+                Mehr Infos zum Kurs</Link>
               </div>
             </div>
           </article>
@@ -434,7 +436,9 @@ export default function Home() {
               Mit dem Wissen der ältesten Steuerkanzlei Wiens lernst du, wie du Steuern optimierst, Förderungen richtig nutzt und deine Gagen professionell kalkulierst. So vermeidest du teure Fehler und schaffst finanzielle Sicherheit für deine Karriere.
               <br /><br />
               <div className="actions">
-                <Link to="/kurs/steuern-finanzen" className="btn primary">Mehr Infos zum Kurs</Link>
+                <Link to="/kurs/steuern-finanzen" className="btn primary"
+                onClick={() => posthog.capture('Course clicked', { kurs: 'Steuern & Finanzen' })}>
+                Mehr Infos zum Kurs</Link>
               </div>
             </div>
           </article>
@@ -452,7 +456,10 @@ export default function Home() {
               </div>
               Mit meinem erprobten Set aus kostenlosen Tools und Zeitmanagement-Techniken bringst du Struktur in deinen Musiker:innen-Alltag und steigerst deine Effizienz. Ergänzende Mindset-Strategien stärken deine Vision, halten dich fokussiert und vermeiden Fallen wie Aufschieberitis oder Workflow-Chaos.
               <div className="actions">
-                <Link to="/kurs/workflow" className="btn primary">Mehr Infos zum Kurs</Link>
+                <Link to="/kurs/workflow"
+                  className="btn primary"
+                  onClick={() => posthog.capture('Course clicked', { kurs: 'Marketing & Sales' })}> Mehr Infos zum Kurs
+                </Link>
               </div>
             </div>
           </article>
@@ -469,7 +476,10 @@ export default function Home() {
               </div>
               Lerne, wie du aus deiner Musik eine unvergessliche Show machst. Von Storyboard und Moderation über den roten Faden deines Programms bis hin zu Performance-Tipps, Umgang mit Lampenfieber und Publikumsbindung. Ergänzt durch praxisnahe Einblicke in technisches Equipment und Software, die deinen Auftritt auf ein neues Level heben.
               <div className="actions">
-                <Link to="/kurs/showkonzept" className="btn primary">Mehr Infos zum Kurs</Link>
+                <Link to="/kurs/showkonzept"
+                className="btn primary"
+                onClick={() => posthog.capture('Course clicked', { kurs: 'Steuern & Finanzen' })}>
+                  Mehr Infos zum Kurs</Link>
               </div>
             </div>
           </article>
