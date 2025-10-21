@@ -1,13 +1,27 @@
-import { Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import Course from './pages/Course';
-import Privacy from './pages/Privacy';
-import MediaKitGenerator from './pages/MediaKitGenerator';
-import NotFound from './pages/NotFound';
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Home from "./pages/Home";
+import Course from "./pages/Course";
+import Privacy from "./pages/Privacy";
+import MediaKitGenerator from "./pages/MediaKitGenerator";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Nur ausführen, wenn PostHog im Fenster verfügbar ist
+    if (window.posthog) {
+      window.posthog.capture('$pageview', {
+        path: location.pathname,
+        search: location.search,
+        title: document.title,
+      });
+    }
+  }, [location]);
+
   return (
     <>
       <Header />

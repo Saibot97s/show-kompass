@@ -458,7 +458,7 @@ export default function Home() {
               <div className="actions">
                 <Link to="/kurs/workflow"
                   className="btn primary"
-                  onClick={() => posthog.capture('Course clicked', { kurs: 'Marketing & Sales' })}> Mehr Infos zum Kurs
+                  onClick={() => posthog.capture('Course clicked', { kurs: 'Zeit, Mindset & Workflow' })}> Mehr Infos zum Kurs
                 </Link>
               </div>
             </div>
@@ -478,7 +478,7 @@ export default function Home() {
               <div className="actions">
                 <Link to="/kurs/showkonzept"
                 className="btn primary"
-                onClick={() => posthog.capture('Course clicked', { kurs: 'Steuern & Finanzen' })}>
+                onClick={() => posthog.capture('Course clicked', { kurs: 'Showact & Entertainment' })}>
                   Mehr Infos zum Kurs</Link>
               </div>
             </div>
