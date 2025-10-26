@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useId } from "react";
+import { useState, useRef, useMemo, useId, useEffect, memo } from "react";
 import html2pdf from "html2pdf.js";
 import Cropper from "react-easy-crop";
 import { jsPDF } from "jspdf";
@@ -174,6 +174,59 @@ async function waitForImages(root) {
   }));
 }
 
+const STORAGE_KEY = "mk:autosave:v1";
+
+// ⬇️ Top-Level, außerhalb von MediaKitGenerator!
+const InputWithCounter = memo(function InputWithCounter({ value, onChange, className = "", style, maxLength, ...props }) {
+  const used = value?.length ?? 0;
+  return (
+    <div className="with-counter">
+      <input
+        {...props}
+        className={className}
+        value={value}
+        onChange={onChange}
+        maxLength={maxLength}
+        style={{ paddingRight: 64, ...(style || {}) }}
+        aria-describedby={props.id ? `${props.id}-limit` : undefined}
+      />
+      <span
+        id={props.id ? `${props.id}-limit` : undefined}
+        className={`limit-badge ${(typeof maxLength === "number" && used >= maxLength) ? "is-full" :
+          (typeof maxLength === "number" && used > maxLength - 20) ? "is-warn" : ""}`}
+        aria-live="polite"
+      >
+        {typeof maxLength === "number" ? `${used}/${maxLength}` : ""}
+      </span>
+    </div>
+  );
+});
+
+const TextareaWithCounter = memo(function TextareaWithCounter({ value, onChange, className = "", style, maxLength, ...props }) {
+  const used = value?.length ?? 0;
+  return (
+    <div className="with-counter">
+      <textarea
+        {...props}
+        className={className}
+        value={value}
+        onChange={onChange}
+        maxLength={maxLength}
+        style={{ paddingRight: 64, paddingBottom: 28, ...(style || {}) }}
+        aria-describedby={props.id ? `${props.id}-limit` : undefined}
+      />
+      <span
+        id={props.id ? `${props.id}-limit` : undefined}
+        className={`limit-badge ${(typeof maxLength === "number" && used >= maxLength) ? "is-full" :
+          (typeof maxLength === "number" && used > maxLength - 40) ? "is-warn" : ""}`}
+        aria-live="polite"
+      >
+        {typeof maxLength === "number" ? `${used}/${maxLength}` : ""}
+      </span>
+    </div>
+  );
+});
+
 export default function MediaKitGenerator() {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("[Name] ist ein/e [Genre]-Musiker/in aus [Ort], der/die seit [Jahr] Musik veröffentlicht. Erste Erfolge waren [Highlight 1] und [Highlight 2]. Sein/ihr Sound bewegt sich zwischen [Genre/Einflüsse] und [besondere Merkmale]. [Name] begann mit [Instrument] im Alter von [X Jahren]. Inspiriert von [Einflüsse] entwickelte er/sie einen Stil, der [Beschreibung des Sounds]. Zurzeit arbeitet [Name] an [Projekt/Release/Tour]. Zusätzlich ist er/sie in [Nebenprojekte] involviert. In den kommenden Monaten stehen [Events/Shows] an.");
@@ -214,6 +267,66 @@ export default function MediaKitGenerator() {
   const [busy, setBusy] = useState(false);
   const hiddenHostRef = useRef(null);
 
+
+
+  // einmalig laden
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const v = JSON.parse(raw);
+
+      if (typeof v.name === "string") setName(v.name);
+      if (typeof v.tagline === "string") setTagline(v.tagline);
+      if (typeof v.contact === "string") setContact(v.contact);
+      if (typeof v.heroText === "string") setHeroText(v.heroText);
+      if (typeof v.ctaUrl === "string") setCtaUrl(v.ctaUrl);
+      if (typeof v.ctaLabel === "string") setCtaLabel(v.ctaLabel);
+      if (typeof v.templateId === "string") setTemplateId(v.templateId);
+      if (typeof v.bioBlock === "string") setBioBlock(v.bioBlock);
+      if (typeof v.repertoireBlock === "string") setRepertoireBlock(v.repertoireBlock);
+      if (typeof v.riderBlock === "string") setRiderBlock(v.riderBlock);
+      if (typeof v.photoUrl === "string") setPhotoUrl(v.photoUrl);
+      if (typeof v.portraitPhotoUrl === "string") setPortraitPhotoUrl(v.portraitPhotoUrl);
+    } catch (e) {
+      console.warn("Autosave laden fehlgeschlagen:", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    const payload = {
+      name,
+      tagline,
+      contact,
+      heroText,
+      ctaUrl,
+      ctaLabel,
+      templateId,
+      bioBlock,
+      repertoireBlock,
+      riderBlock,
+      photoUrl,
+      portraitPhotoUrl,
+    };
+
+    const id = setTimeout(() => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      } catch (e) {
+        // 5MB Limit kann bei großen Data-URLs erreicht werden
+        console.warn("Autosave fehlgeschlagen (Speicher voll?):", e);
+      }
+    }, 250); // kleiner Debounce
+
+    return () => clearTimeout(id);
+  }, [
+    name, tagline, contact, heroText, ctaUrl, ctaLabel, templateId,
+    bioBlock, repertoireBlock, riderBlock,
+    photoUrl, portraitPhotoUrl
+  ]);
+
+
+
   function normalizeUrl(u) {
     if (!u) return "";
     const hasProto = /^https?:\/\//i.test(u);
@@ -241,7 +354,7 @@ export default function MediaKitGenerator() {
       let html = await res.text();
 
       // 2) Platzhalter
-      const autoTagline = (bio || "").split(/\n/).find(l => l.trim()) || "";
+      const autoTagline = (bioBlock || "").split(/\n/).find(l => l.trim()) || "";
       const finalTagline = (tagline && tagline.trim())
         ? tagline.trim()
         : autoTagline.slice(0, 120);
@@ -397,28 +510,28 @@ export default function MediaKitGenerator() {
   }
 
 
-async function portraitPhotoChange(e) {
-  const f = e.target.files?.[0];
-  if (!f) return;
-  const r = new FileReader();
+  async function portraitPhotoChange(e) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const r = new FileReader();
 
-  r.onload = async () => {
-    const dataUrl = String(r.result || "");
+    r.onload = async () => {
+      const dataUrl = String(r.result || "");
 
-    // Bildgröße ermitteln und 3:4-Fallback-Crop berechnen
-    const img = await createImage(dataUrl);
-    const fallback = getCoverCropPixels(img.width, img.height, PORTRAIT_ASPECT); // 3/4
+      // Bildgröße ermitteln und 3:4-Fallback-Crop berechnen
+      const img = await createImage(dataUrl);
+      const fallback = getCoverCropPixels(img.width, img.height, PORTRAIT_ASPECT); // 3/4
 
-    // States setzen
-    setRawPortraitPhotoUrl(dataUrl);
-    setPortraitCroppedPixels(fallback); // <-- wichtiger Teil
-    setPortraitCrop({ x: 0, y: 0 });
-    setPortraitZoom(1);
-    setPortraitCropOpen(true); // Dialog darf offen bleiben – ist aber schon "valid"
-  };
+      // States setzen
+      setRawPortraitPhotoUrl(dataUrl);
+      setPortraitCroppedPixels(fallback); // <-- wichtiger Teil
+      setPortraitCrop({ x: 0, y: 0 });
+      setPortraitZoom(1);
+      setPortraitCropOpen(true); // Dialog darf offen bleiben – ist aber schon "valid"
+    };
 
-  r.readAsDataURL(f);
-}
+    r.readAsDataURL(f);
+  }
 
   async function confirmCrop() {
     if (!rawPhotoUrl) return;
@@ -505,11 +618,12 @@ async function portraitPhotoChange(e) {
 
         <div className="field">
           <label htmlFor="tagline" className="label">Kurzbeschriebung Titelblatt</label>
-          <textarea
+          <TextareaWithCounter
             className="big-textarea"
             placeholder={"[Name] verbindet eindrucksvolle [Genre/Mix: z. B. Melodic & Tech House] mit organischen Samples und detailverliebten Arrangements. Ideal für [Event-Typ] und andere Veranstaltungen.\n \n Bekannt aus: Bekannt aus: [Sender 1] · [Zeitung 1]"}
             rows={6}
             value={heroText}
+              maxLength={250}
             onChange={(e) => setHeroText(e.target.value)}
           />
         </div>
@@ -586,37 +700,41 @@ async function portraitPhotoChange(e) {
               </div>
             </CollapsibleText>
           </div>
-          <textarea
+
+          <TextareaWithCounter
             id="mk-bio"
-            name="bio"
             className="big-textarea"
-            defaultValue="hahah"
-            required
             rows={10}
             value={bioBlock}
             onChange={(e) => setBioBlock(e.target.value)}
+            maxLength={1000}
+            onBlur={() => console.log("BIO blur")}
+            onFocus={() => console.log("BIO focus")}
           />
+
         </div>
 
 
         <div className="field">
           <label htmlFor="tagline" className="label">Repertoire *</label>
-          <textarea
+          <TextareaWithCounter
             className="big-textarea"
             placeholder="Liste hier deine Songs auf: Songname 1  (Interpret), Songname 2 (Interpret),..."
             rows={6}
             value={repertoireBlock}
             onChange={(e) => setRepertoireBlock(e.target.value)}
+            maxLength={600}
           />
         </div>
 
         <div className="field">
           <label htmlFor="tagline" className="label">Tech Rider *</label>
-          <textarea
+          <TextareaWithCounter
             className="big-textarea"
             placeholder="Bühne mind. 3x2 m, Stromanschluss (230 V Schuko) bühnennah, 1x Gesangsmikrofon (z. B. SM58), 1x Mikrofonständer, 1x DI-Box oder Klinke-Kabel (3,5 mm auf 2x XLR/Klinke) für Playback, 1x Monitor (Boden oder In-Ear), PA-Anlage passend zur Raumgröße, Mischpult min. 2 Kanäle (Gesang + Playback), Grundbeleuchtung mit weichem Frontlicht, Soundcheck ca. 15 Min., Aufbauzeit ca. 20–30 Min., Zuspielung über eigenes Abspielgerät (Laptop/Smartphone), Backstage: Umkleide. Outdoor: überdachte Bühne erforderlich, keine direkte Sonne oder Regen auf Technik/Künstlerin."
             rows={6}
             value={riderBlock}
+            maxLength={850}
             onChange={(e) => setRiderBlock(e.target.value)}
           />
         </div>
@@ -691,11 +809,36 @@ async function portraitPhotoChange(e) {
 
 
         <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+          {/*<button type="button" className="btn" onClick={() => {
+          try {
+            const snap = {
+              name, tagline, contact, heroText, ctaUrl, ctaLabel, templateId,
+              bioBlock, repertoireBlock, riderBlock, photoUrl, portraitPhotoUrl
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(snap));
+            alert("D Entwurf gespeichert.");
+          } catch (e) { alert("Speichern fehlgeschlagen."); }
+        }}>
+          Speichern
+        </button>*/}
           <button type="submit" className="btn primary generate-btn" disabled={busy}>
             {busy ? "Erzeuge…" : "Media Kit generieren"}
           </button>
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              if (window.confirm("Formular wirklich zurücksetzen? Alle Eingaben werden gelöscht.")) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+              }
+            }}
+          >
+            Formular zurücksetzen
+          </button>
         </div>
       </form>
+
 
       {/* Crop-Dialog */}
       {cropOpen && rawPhotoUrl && (

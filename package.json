@@ -11,6 +11,10 @@
     "deploy": "yarn build && cp docs/index.html docs/404.html && git add docs -f && git commit -m \"Deploy\" && git push"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.4",
+    "@mui/material": "^7.3.4",
     "buffer": "^6.0.3",
     "docx-templates": "^4.14.1",
     "docxtemplater": "^3.65.3",

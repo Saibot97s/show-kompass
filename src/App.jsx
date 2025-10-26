@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Course from "./pages/Course";
 import Privacy from "./pages/Privacy";
 import MediaKitGenerator from "./pages/MediaKitGenerator";
+import MediaKitGenerator2 from "./pages/MediaKitGenerator_v2";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/mediakit" element={<Home />} />
         <Route path="/mediakit/3Fy9" element={<MediaKitGenerator />} />
+        <Route path="/mediakit/12345" element={<MediaKitGenerator2 />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/kurs/:slug" element={<Course />} />
         <Route path="*" element={<NotFound />} />
